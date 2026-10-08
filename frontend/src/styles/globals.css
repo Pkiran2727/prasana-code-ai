@@ -1,0 +1,164 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* DARK THEME (Default) */
+  :root, [data-theme="dark"] {
+    --bg-primary: #0b0f19;
+    --text-primary: #f1f5f9;
+    
+    /* Slate Palette (Standard) */
+    --c-slate-50: #f8fafc;
+    --c-slate-100: #f1f5f9;
+    --c-slate-200: #e2e8f0;
+    --c-slate-300: #cbd5e1;
+    --c-slate-400: #94a3b8;
+    --c-slate-500: #64748b;
+    --c-slate-600: #475569;
+    --c-slate-700: #334155;
+    --c-slate-800: #1e293b;
+    --c-slate-900: #0f172a;
+    --c-slate-950: #020617;
+
+    --c-emerald-300: #6ee7b7;
+    --c-emerald-400: #34d399;
+    --c-emerald-500: #10b981;
+    --c-teal-300: #5eead4;
+    --c-teal-400: #2dd4bf;
+    --c-teal-500: #14b8a6;
+
+    /* Semantic backgrounds */
+    --bg-app: #0b0f19;
+    --bg-panel: #0f172a;
+    --bg-surface: #1e293b;
+    --bg-editor: #161b22;
+    --bg-terminal: #0d1117;
+  }
+  
+  /* LIGHT THEME */
+  [data-theme="light"] {
+    --bg-primary: #f8fafc;
+    --text-primary: #0f172a;
+    
+    /* Slate Palette (Inverted) */
+    --c-slate-50: #020617;
+    --c-slate-100: #0f172a;
+    --c-slate-200: #1e293b;
+    --c-slate-300: #334155;
+    --c-slate-400: #475569;
+    --c-slate-500: #64748b;
+    --c-slate-600: #94a3b8;
+    --c-slate-700: #cbd5e1;
+    --c-slate-800: #e2e8f0;
+    --c-slate-900: #f1f5f9;
+    --c-slate-950: #ffffff;
+
+    --c-emerald-300: #047857; /* 700 equivalent */
+    --c-emerald-400: #059669; /* 600 equivalent */
+    --c-emerald-500: #10b981;
+    --c-teal-300: #0f766e; /* 700 equivalent */
+    --c-teal-400: #0d9488; /* 600 equivalent */
+    --c-teal-500: #14b8a6;
+
+    /* Semantic backgrounds */
+    --bg-app: #f8fafc;
+    --bg-panel: #ffffff;
+    --bg-surface: #e2e8f0;
+    --bg-editor: #ffffff;
+    --bg-terminal: #f1f5f9;
+  }
+
+  /* HC DARK THEME */
+  [data-theme="hc-dark"] {
+    --bg-primary: #000000;
+    --text-primary: #ffffff;
+    
+    /* Slate Palette (High Contrast Dark) */
+    --c-slate-50: #ffffff;
+    --c-slate-100: #ffffff;
+    --c-slate-200: #dddddd;
+    --c-slate-300: #bbbbbb;
+    --c-slate-400: #999999;
+    --c-slate-500: #777777;
+    --c-slate-600: #555555;
+    --c-slate-700: #888888; /* Used for scrollbar thumb */
+    --c-slate-800: #ffffff; /* IMPORTANT: Used for borders - pure white for high contrast */
+    --c-slate-900: #000000;
+    --c-slate-950: #000000;
+
+    --c-emerald-300: #6ee7b7;
+    --c-emerald-400: #34d399;
+    --c-emerald-500: #10b981;
+    --c-teal-300: #5eead4;
+    --c-teal-400: #2dd4bf;
+    --c-teal-500: #14b8a6;
+
+    /* Semantic backgrounds */
+    --bg-app: #000000;
+    --bg-panel: #000000;
+    --bg-surface: #000000;
+    --bg-editor: #000000;
+    --bg-terminal: #000000;
+  }
+
+  /* HC LIGHT THEME */
+  [data-theme="hc-light"] {
+    --bg-primary: #ffffff;
+    --text-primary: #000000;
+    
+    /* Slate Palette (High Contrast Light) */
+    --c-slate-50: #000000;
+    --c-slate-100: #000000;
+    --c-slate-200: #222222;
+    --c-slate-300: #444444;
+    --c-slate-400: #666666;
+    --c-slate-500: #888888;
+    --c-slate-600: #aaaaaa;
+    --c-slate-700: #777777; /* Used for scrollbar thumb */
+    --c-slate-800: #000000; /* IMPORTANT: Used for borders - pure black for high contrast */
+    --c-slate-900: #ffffff;
+    --c-slate-950: #ffffff;
+
+    --c-emerald-300: #064e3b; /* 900 */
+    --c-emerald-400: #065f46; /* 800 */
+    --c-emerald-500: #047857; /* 700 */
+    --c-teal-300: #134e4a; /* 900 */
+    --c-teal-400: #115e59; /* 800 */
+    --c-teal-500: #0f766e; /* 700 */
+
+    /* Semantic backgrounds */
+    --bg-app: #ffffff;
+    --bg-panel: #ffffff;
+    --bg-surface: #ffffff;
+    --bg-editor: #ffffff;
+    --bg-terminal: #ffffff;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    @apply m-0 p-0 overflow-hidden font-sans select-none;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* Custom soft scrollbars */
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--bg-surface);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--c-slate-700);
+    border-radius: 6px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--c-slate-600);
+  }
+}
