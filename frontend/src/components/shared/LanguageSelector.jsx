@@ -4,13 +4,8 @@ import { ChevronDown } from 'lucide-react';
 export const LANGUAGES = [
   { value: 'python', label: 'Python 🐍', extension: '.py' },
   { value: 'javascript', label: 'JavaScript ⚡', extension: '.js' },
-  { value: 'typescript', label: 'TypeScript 📘', extension: '.ts' },
-  { value: 'java', label: 'Java ☕', extension: '.java' },
   { value: 'cpp', label: 'C++ 🛠️', extension: '.cpp' },
   { value: 'c', label: 'C 🔩', extension: '.c' },
-  { value: 'go', label: 'Go 🐹', extension: '.go' },
-  { value: 'rust', label: 'Rust 🦀', extension: '.rs' },
-  { value: 'bash', label: 'Bash 🐚', extension: '.sh' },
 ];
 
 export default function LanguageSelector({ selectedLanguage, onChange }) {

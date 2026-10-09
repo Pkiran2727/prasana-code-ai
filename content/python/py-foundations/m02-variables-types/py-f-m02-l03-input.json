@@ -1,0 +1,111 @@
+{
+  "slug": "py-f-m02-l03-input",
+  "course": "py-foundations",
+  "module": "m02-variables-types",
+  "type": "challenge",
+  "difficulty": 2,
+  "xp": 15,
+  "is_premium": false,
+  "outcome": "Student can read data using input() and display it.",
+  "prerequisites": [
+    "py-f-m02-l01-variables"
+  ],
+  "content": {
+    "en": {
+      "title": "Taking User Input",
+      "body_md": "Programs are interactive! You can ask the user for data using `input()`. The program pauses, waits for the user to type something, and then reads it as text.\n\n```python\nname = input()\nprint(\"Hello\")\nprint(name)\n```\nIf you type `Raju`, it prints Hello and then Raju."
+    },
+    "te": {
+      "title": "యూజర్ ఇన్‌పుట్ (User Input)",
+      "body_md": "ప్రోగ్రామ్స్ తో ఇంటరాక్ట్ అవ్వచ్చు! మీరు `input()` వాడి యూజర్ ని డేటా అడగవచ్చు. ప్రోగ్రామ్ ఆగి, యూజర్ ఏదైనా టైప్ చేసే వరకు వెయిట్ చేసి, దాన్ని టెక్స్ట్ లాగా తీసుకుంటుంది.\n\n```python\nname = input()\nprint(\"Hello\")\nprint(name)\n```\nమీరు `Raju` అని టైప్ చేస్తే, అది Hello ఆ తర్వాత Raju అని ప్రింట్ చేస్తుంది."
+    }
+  },
+  "try_it": "Run this code and type your name in the input box.",
+  "challenge": {
+    "language": "python",
+    "instructions_md": "Read a color name using `input()` and store it in a variable called `color`. Then print the `color` variable.",
+    "starter_code": "# Task: read input into color\n# Task: print color\n",
+    "solution_code": "color = input()\nprint(color)\n",
+    "time_limit_ms": 3000,
+    "tests": [
+      {
+        "stdin": "Red\n",
+        "expected": "Red",
+        "hidden": false
+      },
+      {
+        "stdin": "Blue\n",
+        "expected": "Blue",
+        "hidden": false
+      },
+      {
+        "stdin": "Green\n",
+        "expected": "Green",
+        "hidden": true
+      },
+      {
+        "stdin": "Yellow\n",
+        "expected": "Yellow",
+        "hidden": true
+      },
+      {
+        "stdin": "Black\n",
+        "expected": "Black",
+        "hidden": true
+      }
+    ],
+    "wrong_solutions": [
+      {
+        "label": "hardcode",
+        "code": "color = \"Red\"\nprint(color)\n"
+      },
+      {
+        "label": "print-input-string",
+        "code": "print(\"input()\")\n"
+      }
+    ],
+    "hints": [
+      "Call the input() function and assign it to a variable.",
+      "Write `color = input()`.",
+      "Use print(color)."
+    ]
+  },
+  "teaching_notes": "Students commonly hardcode the answer instead of using input(). Ensure tests cover different inputs.",
+  "quiz": [
+    {
+      "qtype": "mcq_single",
+      "prompt_md": "What does `input()` do?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Prints data to the screen"
+        },
+        {
+          "id": "b",
+          "text": "Reads typed text from the user"
+        },
+        {
+          "id": "c",
+          "text": "Generates a random number"
+        }
+      ],
+      "answer": [
+        "b"
+      ],
+      "explanation_md": "`input()` reads the text typed by the user."
+    },
+    {
+      "qtype": "predict_output",
+      "prompt_md": "If user types `5`, what prints?\n```python\nx = input()\nprint(x)\n```",
+      "answer": "5",
+      "explanation_md": "It will print `5` as typed by the user."
+    }
+  ],
+  "recap": [
+    "input() reads text",
+    "It pauses the program until enter is pressed"
+  ],
+  "common_mistakes": [
+    "Hardcoding instead of reading input"
+  ]
+}

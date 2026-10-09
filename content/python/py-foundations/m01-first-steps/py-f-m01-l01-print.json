@@ -1,0 +1,111 @@
+{
+  "slug": "py-f-m01-l01-print",
+  "course": "py-foundations",
+  "module": "m01-first-steps",
+  "type": "challenge",
+  "difficulty": 1,
+  "xp": 10,
+  "is_premium": false,
+  "outcome": "Student can display text on the screen using the 'print()' function.",
+  "prerequisites": [],
+  "content": {
+    "en": {
+      "title": "Your First Python Code",
+      "body_md": "Programming is like giving instructions to a computer. In Python, the simplest instruction is `print()`. It tells the computer to show something on the screen. \n\nThink of it as writing a note on a whiteboard.\n\n```python\nprint(\"Hello, World!\")\n```\nThis will show `Hello, World!` on the screen. The text you want to print must be inside quotes (`\" \"` or `' '`)."
+    },
+    "te": {
+      "title": "మీ మొదటి పైథాన్ కోడ్",
+      "body_md": "ప్రోగ్రామింగ్ అంటే కంప్యూటర్‌కు సూచనలు ఇవ్వడం లాంటిది. Python లో, అత్యంత సాధారణ సూచన `print()`. ఇది కంప్యూటర్‌ను స్క్రీన్‌పై ఏదైనా చూపించమని చెబుతుంది. \n\nదీన్ని వైట్‌బోర్డ్‌పై నోట్ రాయడం లాగా ఊహించుకోండి.\n\n```python\nprint(\"Hello, World!\")\n```\nఇది స్క్రీన్‌పై `Hello, World!` అని చూపిస్తుంది. మీరు ప్రింట్ చేయాలనుకుంటున్న టెక్స్ట్ తప్పనిసరిగా కోట్స్ (`\" \"` లేదా `' '`) మధ్య ఉండాలి."
+    }
+  },
+  "try_it": "Change \"Hello, World!\" to your name and run it.",
+  "challenge": {
+    "language": "python",
+    "instructions_md": "Use the `print()` function to display exactly `Namaste, Python!` on the screen.",
+    "starter_code": "# Task: Print Namaste, Python!\n",
+    "solution_code": "print(\"Namaste, Python!\")\n",
+    "time_limit_ms": 3000,
+    "tests": [
+      {
+        "stdin": "",
+        "expected": "Namaste, Python!",
+        "hidden": false
+      },
+      {
+        "stdin": "a\n",
+        "expected": "Namaste, Python!",
+        "hidden": false
+      },
+      {
+        "stdin": "b\n",
+        "expected": "Namaste, Python!",
+        "hidden": false
+      },
+      {
+        "stdin": "c\n",
+        "expected": "Namaste, Python!",
+        "hidden": true
+      },
+      {
+        "stdin": "d\n",
+        "expected": "Namaste, Python!",
+        "hidden": true
+      }
+    ],
+    "wrong_solutions": [
+      {
+        "label": "missing-quotes",
+        "code": "print(Namaste, Python!)\n"
+      },
+      {
+        "label": "wrong-text",
+        "code": "print(\"Hello, Python!\")\n"
+      }
+    ],
+    "hints": [
+      "Use the print() function to display text on the screen.",
+      "The text inside print() must be enclosed in double quotes (\").",
+      "Plan: Write print(\"Namaste, Python!\")."
+    ]
+  },
+  "teaching_notes": "Common mistakes: forgetting quotes, uppercase/lowercase mismatches (e.g., 'print' vs 'Print'). Emphasize that the text must match exactly.",
+  "quiz": [
+    {
+      "qtype": "mcq_single",
+      "prompt_md": "Which function is used in Python to display text on the screen?",
+      "options": [
+        {
+          "id": "a",
+          "text": "show()"
+        },
+        {
+          "id": "b",
+          "text": "print()"
+        },
+        {
+          "id": "c",
+          "text": "display()"
+        }
+      ],
+      "answer": [
+        "b"
+      ],
+      "explanation_md": "In Python, `print()` is used to display text."
+    },
+    {
+      "qtype": "predict_output",
+      "prompt_md": "What prints?\n```python\nprint(\"123\")\n```",
+      "answer": "123",
+      "explanation_md": "Whatever is inside `print()` will be displayed on the screen."
+    }
+  ],
+  "recap": [
+    "print() is used to show text",
+    "Text must be in quotes",
+    "Python is case-sensitive"
+  ],
+  "common_mistakes": [
+    "Forgetting quotes",
+    "Capital P in print"
+  ]
+}

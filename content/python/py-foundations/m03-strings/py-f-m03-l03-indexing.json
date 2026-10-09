@@ -1,0 +1,111 @@
+{
+  "slug": "py-f-m03-l03-indexing",
+  "course": "py-foundations",
+  "module": "m03-strings",
+  "type": "challenge",
+  "difficulty": 2,
+  "xp": 15,
+  "is_premium": false,
+  "outcome": "Student can access characters using string indexing (0-based).",
+  "prerequisites": [
+    "py-f-m03-l01-concat"
+  ],
+  "content": {
+    "en": {
+      "title": "String Indexing",
+      "body_md": "Every character in a string has a position number called an **index**. In Python, counting starts at **0**.\n\nFor the string `\"PYTHON\"`:\n`P` is at index 0\n`Y` is at index 1\n`T` is at index 2\n\nYou access it using square brackets `[]`.\n\n```python\nword = \"PYTHON\"\nprint(word[0]) # Prints P\nprint(word[2]) # Prints T\n```"
+    },
+    "te": {
+      "title": "స్ట్రింగ్ ఇండెక్సింగ్ (String Indexing)",
+      "body_md": "ఒక స్ట్రింగ్ లోని ప్రతీ అక్షరానికి ఒక నంబర్ ఉంటుంది. దాన్ని **index** అంటారు. Python లో కౌంటింగ్ **0** తో మొదలవుతుంది.\n\n`\"PYTHON\"` అనే స్ట్రింగ్ కు:\n`P` ఇండెక్స్ 0\n`Y` ఇండెక్స్ 1\n`T` ఇండెక్స్ 2\n\nఅక్షరాలని చదవడానికి స్క్వేర్ బ్రాకెట్స్ `[]` వాడాలి.\n\n```python\nword = \"PYTHON\"\nprint(word[0]) # P ని ప్రింట్ చేస్తుంది\nprint(word[2]) # T ని ప్రింట్ చేస్తుంది\n```"
+    }
+  },
+  "try_it": "Change word[0] to word[5] to get the last letter.",
+  "challenge": {
+    "language": "python",
+    "instructions_md": "Read a word using `input()`. Print the **second** character of the word.",
+    "starter_code": "word = input()\n# Task: print the second character\n",
+    "solution_code": "word = input()\nprint(word[1])\n",
+    "time_limit_ms": 3000,
+    "tests": [
+      {
+        "stdin": "Apple\n",
+        "expected": "p",
+        "hidden": false
+      },
+      {
+        "stdin": "Banana\n",
+        "expected": "a",
+        "hidden": false
+      },
+      {
+        "stdin": "Cat\n",
+        "expected": "a",
+        "hidden": true
+      },
+      {
+        "stdin": "Orange\n",
+        "expected": "r",
+        "hidden": true
+      },
+      {
+        "stdin": "Mango\n",
+        "expected": "a",
+        "hidden": true
+      }
+    ],
+    "wrong_solutions": [
+      {
+        "label": "index-2",
+        "code": "word = input()\nprint(word[2])\n"
+      },
+      {
+        "label": "index-0",
+        "code": "word = input()\nprint(word[0])\n"
+      }
+    ],
+    "hints": [
+      "What is the index for the second character?",
+      "In Python, counting starts from 0, so the second letter has an index of 1.",
+      "Print `word[1]`."
+    ]
+  },
+  "teaching_notes": "Very common to use [2] for the second character. Emphasize zero-based indexing.",
+  "quiz": [
+    {
+      "qtype": "predict_output",
+      "prompt_md": "What prints?\n```python\nword = \"CODE\"\nprint(word[3])\n```",
+      "answer": "E",
+      "explanation_md": "C=0, O=1, D=2, E=3."
+    },
+    {
+      "qtype": "mcq_single",
+      "prompt_md": "How to get the first character of `x`?",
+      "options": [
+        {
+          "id": "a",
+          "text": "x[1]"
+        },
+        {
+          "id": "b",
+          "text": "x[0]"
+        },
+        {
+          "id": "c",
+          "text": "x(0)"
+        }
+      ],
+      "answer": [
+        "b"
+      ],
+      "explanation_md": "In Python, the index starts at 0, and you must use square brackets `[]`."
+    }
+  ],
+  "recap": [
+    "Index starts at 0",
+    "Use square brackets [] to get characters"
+  ],
+  "common_mistakes": [
+    "Starting count from 1"
+  ]
+}

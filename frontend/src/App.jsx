@@ -54,7 +54,7 @@ export default function App() {
     {
       id: 'welcome',
       sender: 'assistant',
-      text: "Welcome to Prasana Code AI! 🤖\n\nI am your **Prasana AI Tutor** (by @itsprasana). I am trained using Coddy.tech tutoring principles.\n\nAsk me for hints, error line debugging, or code review anytime! Try opening `main.py` or pick a Journey above.",
+      text: "Welcome to Prasana Code AI! 🤖\n\nI am **Mitra**, your AI Tutor (by @itsprasana).\n\nAsk me for hints, error line debugging, or code review anytime! Try opening `main.py` or pick a Journey above.",
       tools: []
     }
   ]);
@@ -602,7 +602,7 @@ export default function App() {
         />
       )}
 
-      {/* Interactive Coddy-Style Lesson View Overlay */}
+      {/* Interactive Lesson View Overlay */}
       {activeLesson && (
         <InteractiveLessonView
           lesson={activeLesson}
@@ -648,7 +648,7 @@ export default function App() {
               setActiveLesson({
                 id: node.id,
                 title: node.title,
-                instructions: "You are given a code which gets as input two numbers n1 and n2 and a character op. Your task is to set the variable result based on the conditions."
+                description: node.description || "Complete the task to proceed to the next node."
               });
             }}
           />

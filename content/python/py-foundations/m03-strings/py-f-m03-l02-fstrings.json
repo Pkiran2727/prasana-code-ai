@@ -1,0 +1,113 @@
+{
+  "slug": "py-f-m03-l02-fstrings",
+  "course": "py-foundations",
+  "module": "m03-strings",
+  "type": "challenge",
+  "difficulty": 2,
+  "xp": 15,
+  "is_premium": false,
+  "outcome": "Student can use f-strings for formatting.",
+  "prerequisites": [
+    "py-f-m03-l01-concat"
+  ],
+  "content": {
+    "en": {
+      "title": "f-Strings (Formatted Strings)",
+      "body_md": "Using `+` to join strings can be messy. Python has a superpower called **f-strings**. Just put an `f` before the quotes, and put your variables inside `{}`.\n\n```python\nname = \"Prasana\"\nage = 20\n\n# Messy:\nprint(\"My name is \" + name + \" and I am \" + str(age))\n\n# Clean (f-string):\nprint(f\"My name is {name} and I am {age}\")\n```"
+    },
+    "te": {
+      "title": "f-Strings (సులభంగా టెక్స్ట్ ఫార్మాటింగ్)",
+      "body_md": "`+` వాడి స్ట్రింగ్స్ కలపడం కొంచెం కష్టం కావచ్చు. Python లో **f-strings** అనే అద్భుతమైన ఫీచర్ ఉంది. కోట్స్ కి ముందు `f` పెట్టి, వేరియబుల్స్ ని `{}` మధ్యలో పెడితే చాలు.\n\n```python\nname = \"Prasana\"\nage = 20\n\n# పాత పద్ధతి:\nprint(\"My name is \" + name + \" and I am \" + str(age))\n\n# కొత్త పద్ధతి (f-string):\nprint(f\"My name is {name} and I am {age}\")\n```"
+    }
+  },
+  "try_it": "Change the name in the example and run.",
+  "challenge": {
+    "language": "python",
+    "instructions_md": "Read two inputs: a `city` and a `weather`. Then print exactly `The weather in <city> is <weather>.` using an f-string.",
+    "starter_code": "city = input()\nweather = input()\n# Task: print using f-string\n",
+    "solution_code": "city = input()\nweather = input()\nprint(f\"The weather in {city} is {weather}.\")\n",
+    "time_limit_ms": 3000,
+    "tests": [
+      {
+        "stdin": "Hyderabad\nHot\n",
+        "expected": "The weather in Hyderabad is Hot.",
+        "hidden": false
+      },
+      {
+        "stdin": "Delhi\nCold\n",
+        "expected": "The weather in Delhi is Cold.",
+        "hidden": false
+      },
+      {
+        "stdin": "Mumbai\nRaining\n",
+        "expected": "The weather in Mumbai is Raining.",
+        "hidden": true
+      },
+      {
+        "stdin": "Chennai\nSunny\n",
+        "expected": "The weather in Chennai is Sunny.",
+        "hidden": true
+      },
+      {
+        "stdin": "Bangalore\nCool\n",
+        "expected": "The weather in Bangalore is Cool.",
+        "hidden": true
+      }
+    ],
+    "wrong_solutions": [
+      {
+        "label": "no-f",
+        "code": "city = input()\nweather = input()\nprint(\"The weather in {city} is {weather}.\")\n"
+      },
+      {
+        "label": "hardcode",
+        "code": "print(\"The weather in Hyderabad is Hot.\")\n"
+      }
+    ],
+    "hints": [
+      "Put an 'f' right before the string quotes inside print().",
+      "Variables must be placed inside {} braces.",
+      "Write it like: f\"The weather in {city} is {weather}.\""
+    ]
+  },
+  "teaching_notes": "Students might forget the 'f' before the quotes. The output will literally be '{city}'.",
+  "quiz": [
+    {
+      "qtype": "mcq_single",
+      "prompt_md": "What is the correct f-string syntax?",
+      "options": [
+        {
+          "id": "a",
+          "text": "f\"Hello {name}\""
+        },
+        {
+          "id": "b",
+          "text": "\"fHello {name}\""
+        },
+        {
+          "id": "c",
+          "text": "\"Hello {name}\"f"
+        }
+      ],
+      "answer": [
+        "a"
+      ],
+      "explanation_md": "`f` must always be placed directly before the quotes."
+    },
+    {
+      "qtype": "predict_output",
+      "prompt_md": "What prints?\n```python\nitem = \"Car\"\nprint(\"I bought a {item}\")\n```",
+      "answer": "I bought a {item}",
+      "explanation_md": "Because the `f` is missing, it is treated as a regular string."
+    }
+  ],
+  "recap": [
+    "f-strings make text formatting easy",
+    "Always put f before quotes",
+    "Put variables inside {}"
+  ],
+  "common_mistakes": [
+    "Forgetting the f",
+    "Missing curly braces"
+  ]
+}

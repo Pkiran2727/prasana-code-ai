@@ -1,0 +1,113 @@
+{
+  "slug": "py-f-m02-l01-variables",
+  "course": "py-foundations",
+  "module": "m02-variables-types",
+  "type": "challenge",
+  "difficulty": 1,
+  "xp": 10,
+  "is_premium": false,
+  "outcome": "Student can create variables using the = sign.",
+  "prerequisites": [
+    "py-f-m01-l01-print"
+  ],
+  "content": {
+    "en": {
+      "title": "Creating Variables",
+      "body_md": "A **variable** is like a labeled box where you can store data. You create a variable using the `=` sign. The name is on the left, and the data is on the right.\n\nThink of it as putting a sticker named \"age\" on a box containing the number 20.\n\n```python\nage = 20\nname = \"Prasana\"\nprint(age)\nprint(name)\n```"
+    },
+    "te": {
+      "title": "వేరియబుల్స్ (Variables) క్రియేట్ చేయడం",
+      "body_md": "ఒక **variable** అంటే డేటాని దాచుకునే ఒక లేబుల్ ఉన్న డబ్బా లాంటిది. మీరు దీన్ని `=` సింబల్ వాడి క్రియేట్ చేస్తారు. ఎడమవైపు పేరు, కుడివైపు డేటా ఉంటుంది.\n\nదీన్ని \"age\" అనే పేరు ఉన్న డబ్బాలో 20 అనే నెంబర్ ని పెట్టినట్లు ఊహించుకోండి.\n\n```python\nage = 20\nname = \"Prasana\"\nprint(age)\nprint(name)\n```"
+    }
+  },
+  "try_it": "Change the age to 99.",
+  "challenge": {
+    "language": "python",
+    "instructions_md": "Create a variable named `city` and store the text `\"Hyderabad\"` in it. Then, `print` the `city` variable.",
+    "starter_code": "# Task: Create city variable\n# Task: Print city\n",
+    "solution_code": "city = \"Hyderabad\"\nprint(city)\n",
+    "time_limit_ms": 3000,
+    "tests": [
+      {
+        "stdin": "",
+        "expected": "Hyderabad",
+        "hidden": false
+      },
+      {
+        "stdin": "a\n",
+        "expected": "Hyderabad",
+        "hidden": false
+      },
+      {
+        "stdin": "b\n",
+        "expected": "Hyderabad",
+        "hidden": false
+      },
+      {
+        "stdin": "c\n",
+        "expected": "Hyderabad",
+        "hidden": true
+      },
+      {
+        "stdin": "d\n",
+        "expected": "Hyderabad",
+        "hidden": true
+      }
+    ],
+    "wrong_solutions": [
+      {
+        "label": "print-string-name",
+        "code": "city = \"Hyderabad\"\nprint(\"city\")\n"
+      },
+      {
+        "label": "wrong-order",
+        "code": "\"Hyderabad\" = city\nprint(city)\n"
+      }
+    ],
+    "hints": [
+      "The variable name goes on the left, and the value goes on the right. Example: `city = \"value\"`.",
+      "Write `city = \"Hyderabad\"`.",
+      "Pass the variable name to the print() function: `print(city)`."
+    ]
+  },
+  "teaching_notes": "Common mistake: writing 'Hyderabad' = city. Emphasize left-to-right assignment. Also print(\"city\") instead of print(city).",
+  "quiz": [
+    {
+      "qtype": "mcq_single",
+      "prompt_md": "Which of these is a correct variable assignment?",
+      "options": [
+        {
+          "id": "a",
+          "text": "\"Prasana\" = name"
+        },
+        {
+          "id": "b",
+          "text": "name = \"Prasana\""
+        },
+        {
+          "id": "c",
+          "text": "name == \"Prasana\""
+        }
+      ],
+      "answer": [
+        "b"
+      ],
+      "explanation_md": "The variable name must be on the left, and the value on the right."
+    },
+    {
+      "qtype": "predict_output",
+      "prompt_md": "What prints?\n```python\nx = \"Apple\"\nprint(\"x\")\n```",
+      "answer": "x",
+      "explanation_md": "If you put `\"x\"` inside quotes, it prints the letter 'x' literally, not the variable's value."
+    }
+  ],
+  "recap": [
+    "Variable stores data",
+    "Use = to assign",
+    "Variable names don't use quotes"
+  ],
+  "common_mistakes": [
+    "print('var_name') instead of print(var_name)",
+    "Value on left side"
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "slug": "py-f-m03-l04-slicing",
+  "course": "py-foundations",
+  "module": "m03-strings",
+  "type": "challenge",
+  "difficulty": 2,
+  "xp": 25,
+  "is_premium": false,
+  "outcome": "Student can extract sub-strings using string slicing [start:end].",
+  "prerequisites": [
+    "py-f-m03-l03-indexing"
+  ],
+  "content": {
+    "en": {
+      "title": "String Slicing",
+      "body_md": "Sometimes you want a piece of a string, not just one character. This is called **slicing**. You use `[start:end]`.\n\nIt takes characters from `start` up to (but **NOT** including) `end`.\n\n```python\nword = \"PYTHON\"\nprint(word[0:2]) # PY\nprint(word[2:5]) # THO\n```"
+    },
+    "te": {
+      "title": "స్ట్రింగ్ స్లైసింగ్ (String Slicing)",
+      "body_md": "ఒక్కోసారి మీకు స్ట్రింగ్ లోని ఒక భాగం (ముక్క) కావాలి. దీన్నే **slicing** అంటారు. దీనికి `[start:end]` వాడతారు.\n\nఇది `start` ఇండెక్స్ నుండి మొదలుపెట్టి `end` ఇండెక్స్ కి ముందు వరకు (కానీ `end` ని కలుపుకోకుండా) తీసుకుంటుంది.\n\n```python\nword = \"PYTHON\"\nprint(word[0:2]) # PY\nprint(word[2:5]) # THO\n```"
+    }
+  },
+  "try_it": "Try changing the slice to [1:4].",
+  "challenge": {
+    "language": "python",
+    "instructions_md": "Read a string using `input()`. Print the first 3 characters of it using slicing.",
+    "starter_code": "text = input()\n# Task: print first 3 chars\n",
+    "solution_code": "text = input()\nprint(text[0:3])\n",
+    "time_limit_ms": 3000,
+    "tests": [
+      {
+        "stdin": "Prasana\n",
+        "expected": "Pra",
+        "hidden": false
+      },
+      {
+        "stdin": "Coding\n",
+        "expected": "Cod",
+        "hidden": false
+      },
+      {
+        "stdin": "Python\n",
+        "expected": "Pyt",
+        "hidden": true
+      },
+      {
+        "stdin": "Javascript\n",
+        "expected": "Jav",
+        "hidden": true
+      },
+      {
+        "stdin": "Hello\n",
+        "expected": "Hel",
+        "hidden": true
+      }
+    ],
+    "wrong_solutions": [
+      {
+        "label": "wrong-end",
+        "code": "text = input()\nprint(text[1:3])\n"
+      },
+      {
+        "label": "wrong-start",
+        "code": "text = input()\nprint(text[0:4])\n"
+      }
+    ],
+    "hints": [
+      "To get the first 3 characters, you need indices 0 to 2.",
+      "In slicing, the end index is not included, so you must provide 3 as the end index.",
+      "Write `text[0:3]`."
+    ]
+  },
+  "teaching_notes": "The 'up to but not including' rule confuses many. Remind them that [0:3] gives exactly 3 characters.",
+  "quiz": [
+    {
+      "qtype": "predict_output",
+      "prompt_md": "What prints?\n```python\nword = \"BANANA\"\nprint(word[0:4])\n```",
+      "answer": "BANA",
+      "explanation_md": "0(B), 1(A), 2(N), 3(A). The index 4(N) is NOT included."
+    },
+    {
+      "qtype": "mcq_single",
+      "prompt_md": "How to get \"cat\" from \"Education\"?",
+      "options": [
+        {
+          "id": "a",
+          "text": "[3:6]"
+        },
+        {
+          "id": "b",
+          "text": "[3:5]"
+        },
+        {
+          "id": "c",
+          "text": "[4:7]"
+        }
+      ],
+      "answer": [
+        "a"
+      ],
+      "explanation_md": "E=0, d=1, u=2, c=3. You need 3 characters starting from index 3, so 3+3 = 6."
+    }
+  ],
+  "recap": [
+    "[start:end] cuts a string",
+    "end index is NOT included in the result"
+  ],
+  "common_mistakes": [
+    "Thinking the end index is included"
+  ]
+}

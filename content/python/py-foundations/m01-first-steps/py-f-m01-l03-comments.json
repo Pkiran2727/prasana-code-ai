@@ -1,0 +1,111 @@
+{
+  "slug": "py-f-m01-l03-comments",
+  "course": "py-foundations",
+  "module": "m01-first-steps",
+  "type": "challenge",
+  "difficulty": 1,
+  "xp": 10,
+  "is_premium": false,
+  "outcome": "Student can write comments using `#`.",
+  "prerequisites": [
+    "py-f-m01-l02-multiline"
+  ],
+  "content": {
+    "en": {
+      "title": "Comments in Code",
+      "body_md": "Sometimes you want to write notes in your code for yourself or other humans. Python ignores anything that starts with `#`. These are called **comments**.\n\nIt's like a sticky note on a document. The reader sees it, but it's not part of the official text.\n\n```python\n# This is a comment. Python ignores it.\nprint(\"Hello\") # Prints Hello\n```"
+    },
+    "te": {
+      "title": "కోడ్‌లో కామెంట్స్ (Comments)",
+      "body_md": "కొన్నిసార్లు మనం కోడ్‌లో మన కోసం లేదా ఇతరుల కోసం నోట్స్ రాసుకోవాలి అనుకుంటాం. `#` తో మొదలయ్యే దేనినైనా Python పట్టించుకోదు (ignore చేస్తుంది). వీటినే **comments** అంటారు.\n\nఇది ఒక డాక్యుమెంట్ పై అంటించే స్టిక్కీ నోట్ (sticky note) లాంటిది. చదివే వాళ్ళకి కనపడుతుంది, కానీ అఫీషియల్ టెక్స్ట్ లో భాగం కాదు.\n\n```python\n# ఇది కామెంట్. Python దీన్ని రన్ చేయదు.\nprint(\"Hello\") # ఇది Hello ని ప్రింట్ చేస్తుంది.\n```"
+    }
+  },
+  "try_it": "Add a # comment with your age.",
+  "challenge": {
+    "language": "python",
+    "instructions_md": "Print exactly `Python is fun!`. Also add a comment anywhere in your code that says `# My first comment`.",
+    "starter_code": "# Task: Print Python is fun! and add a comment\n",
+    "solution_code": "# My first comment\nprint(\"Python is fun!\")\n",
+    "time_limit_ms": 3000,
+    "tests": [
+      {
+        "stdin": "",
+        "expected": "Python is fun!",
+        "hidden": false
+      },
+      {
+        "stdin": "a\n",
+        "expected": "Python is fun!",
+        "hidden": false
+      },
+      {
+        "stdin": "b\n",
+        "expected": "Python is fun!",
+        "hidden": false
+      },
+      {
+        "stdin": "c\n",
+        "expected": "Python is fun!",
+        "hidden": true
+      },
+      {
+        "stdin": "d\n",
+        "expected": "Python is fun!",
+        "hidden": true
+      }
+    ],
+    "wrong_solutions": [
+      {
+        "label": "print-comment",
+        "code": "print(\"# My first comment\")\nprint(\"Python is fun!\")\n"
+      },
+      {
+        "label": "no-print",
+        "code": "# My first comment\n"
+      }
+    ],
+    "hints": [
+      "Comments must start with a `#` symbol.",
+      "Write `# My first comment` at the beginning.",
+      "On the next line, write `print(\"Python is fun!\")`."
+    ]
+  },
+  "teaching_notes": "Students might put the comment inside a print() statement. Clarify that comments are not printed to the output console.",
+  "quiz": [
+    {
+      "qtype": "mcq_single",
+      "prompt_md": "Which symbol is used to write a comment in Python?",
+      "options": [
+        {
+          "id": "a",
+          "text": "//"
+        },
+        {
+          "id": "b",
+          "text": "<!--"
+        },
+        {
+          "id": "c",
+          "text": "#"
+        }
+      ],
+      "answer": [
+        "c"
+      ],
+      "explanation_md": "In Python, a comment starts with `#`."
+    },
+    {
+      "qtype": "predict_output",
+      "prompt_md": "What prints?\n```python\n# print(\"Hi\")\nprint(\"Bye\")\n```",
+      "answer": "Bye",
+      "explanation_md": "The first line is a comment, so Python completely ignores it."
+    }
+  ],
+  "recap": [
+    "Comments start with #",
+    "Python ignores comments completely"
+  ],
+  "common_mistakes": [
+    "Putting comments inside quotes"
+  ]
+}

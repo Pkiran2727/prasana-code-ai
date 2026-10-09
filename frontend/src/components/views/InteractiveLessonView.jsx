@@ -18,26 +18,38 @@ export default function InteractiveLessonView({
   onClearHistory,
   onStopAgent
 }) {
-  const [code, setCode] = useState(
-    lesson?.starterCode || 
-    `n1 = int(input()) # Don't change this line\nn2 = int(input()) # Don't change this line\nop = input() # Don't change this line\nresult = 0\n\n# Your code here\nif op == '+':\n    result = n1 + n2\nelif op == '-':\n    result = n1 - n2\nelif op == '*':\n    result = n1 * n2\nelif op == '/':\n    result = n1 / n2\n\nprint(f"result = {result}")`
-  );
-
+  const [lessonLang, setLessonLang] = useState('en');
+  const [code, setCode] = useState(lesson?.starterCode || '');
   const [activeTab, setActiveTab] = useState('testcases');
   const [selectedTestCase, setSelectedTestCase] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
-  const [energy, setEnergy] = useState(1); // 1 free energy unit left
+  const [energy, setEnergy] = useState(5); // 5 free energy units
   const [showEnergyModal, setShowEnergyModal] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [countdownMinutes, setCountdownMinutes] = useState(20);
   const [countdownSeconds, setCountdownSeconds] = useState(15);
 
-  const [testResults, setTestResults] = useState([
-    { id: 1, input: "12\n34\n+", output: "", expected: "result = 46\n", status: 'idle' },
-    { id: 2, input: "50\n20\n-", output: "", expected: "result = 30\n", status: 'idle' },
-    { id: 3, input: "6\n7\n*", output: "", expected: "result = 42\n", status: 'idle' },
-    { id: 4, input: "100\n4\n/", output: "", expected: "result = 25.0\n", status: 'idle' }
-  ]);
+  const [testResults, setTestResults] = useState([]);
+
+  // Sync state whenever lesson changes
+  useEffect(() => {
+    if (lesson) {
+      setCode(lesson.starterCode || '');
+      const rawTests = (lesson.testCases && lesson.testCases.length > 0)
+        ? lesson.testCases
+        : (lesson.expectedOutput ? [{ input: '', expected: lesson.expectedOutput }] : [{ input: '', expected: '' }]);
+
+      setTestResults(rawTests.map((t, idx) => ({
+        id: idx + 1,
+        input: t.input || t.stdin || '',
+        output: '',
+        expected: (t.expected || t.expectedOutput || '').trim(),
+        status: 'idle'
+      })));
+      setSelectedTestCase(0);
+      setShowHint(false);
+    }
+  }, [lesson]);
 
   // Renewal Countdown Timer
   useEffect(() => {
@@ -64,25 +76,29 @@ export default function InteractiveLessonView({
     setEnergy(prev => Math.max(0, prev - 1));
 
     try {
+      const currentTest = testResults[selectedTestCase] || testResults[0] || { expected: '', input: '' };
       const res = await fetch(`${API_BASE_URL}/api/verify-solution`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           session_id: sessionId || 'default_session',
           code: code,
-          language: 'python',
-          expected_output: testResults[selectedTestCase].expected
+          language: lesson?.language || 'python',
+          expected_output: currentTest.expected,
+          stdin: currentTest.input
         })
       });
       const data = await res.json();
       
       setTestResults(prev => {
         const updated = [...prev];
-        updated[selectedTestCase] = {
-          ...updated[selectedTestCase],
-          output: data.actual_output || data.stderr || 'No output',
-          status: data.passed ? 'passed' : 'failed'
-        };
+        if (updated[selectedTestCase]) {
+          updated[selectedTestCase] = {
+            ...updated[selectedTestCase],
+            output: (data.actual_output || data.stderr || (data.timed_out ? 'Execution Timed Out' : 'No output')).trim(),
+            status: data.passed ? 'passed' : 'failed'
+          };
+        }
         return updated;
       });
     } catch (err) {
@@ -146,7 +162,7 @@ export default function InteractiveLessonView({
             <X className="w-5 h-5" />
           </button>
           <span className="font-semibold text-sm text-ide-text">
-            {lesson?.title || 'Decision Making'}
+            {lesson?.title || 'Interactive Challenge'}
           </span>
         </div>
 
@@ -175,7 +191,7 @@ export default function InteractiveLessonView({
         <div className="w-1/2 p-8 border-r border-ide-border/80 overflow-y-auto bg-ide-bg">
           <div className="max-w-xl">
             <h1 className="text-3xl font-bold tracking-tight mb-4 text-ide-text">
-              {lesson?.title || 'Recap - Simple Calculator'}
+              {lessonLang === 'te' && lesson?.title_te ? lesson.title_te : (lesson?.title || 'Coding Challenge')}
             </h1>
 
             <div className="flex items-center gap-2 mb-6">
@@ -183,29 +199,49 @@ export default function InteractiveLessonView({
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Challenge</span>
               </span>
-              <span className="px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-300 text-xs font-bold">
-                Beginner
+              <span className="px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-300 text-xs font-bold capitalize">
+                {lesson?.language || 'python'}
               </span>
+
+              {/* Language toggle for instructions */}
+              <div className="ml-auto flex items-center bg-ide-panel border border-ide-border rounded-xl p-0.5 text-xs">
+                <button
+                  onClick={() => setLessonLang('en')}
+                  className={`px-2.5 py-1 rounded-lg font-semibold transition-all ${
+                    lessonLang === 'en' ? 'bg-emerald-500 text-slate-950 font-bold' : 'text-ide-muted hover:text-ide-text'
+                  }`}
+                >
+                  English
+                </button>
+                <button
+                  onClick={() => setLessonLang('te')}
+                  className={`px-2.5 py-1 rounded-lg font-semibold transition-all ${
+                    lessonLang === 'te' ? 'bg-emerald-500 text-slate-950 font-bold' : 'text-ide-muted hover:text-ide-text'
+                  }`}
+                >
+                  తెలుగు
+                </button>
+              </div>
             </div>
 
             <div className="text-ide-text text-sm leading-relaxed space-y-4">
-              <p>
-                {lesson?.instructions || "You are given a code which gets as input two numbers n1 and n2 and a character op."}
-              </p>
-
-              <div className="p-4 rounded-2xl bg-ide-panel border border-ide-border space-y-2 text-xs">
-                <p className="font-bold text-ide-text">The possible values for <code className="bg-ide-sidebar px-1.5 py-0.5 rounded text-emerald-400">'op'</code> are:</p>
-                <div className="flex gap-2">
-                  {["'+'", "'-'", "'/'", "'*'"].map((op, idx) => (
-                    <code key={idx} className="bg-ide-sidebar border border-ide-border px-2 py-1 rounded text-emerald-400 font-mono font-bold">
-                      {op}
-                    </code>
-                  ))}
+              {(lessonLang === 'te' ? lesson?.theory_te : lesson?.theory_en) && (
+                <div className="p-4 rounded-2xl bg-ide-panel/80 border border-ide-border/80 text-xs text-ide-text leading-relaxed whitespace-pre-line font-sans">
+                  {lessonLang === 'te' ? lesson.theory_te : lesson.theory_en}
                 </div>
+              )}
+
+              <div>
+                <div className="font-semibold text-emerald-400 text-xs uppercase tracking-wide mb-1">
+                  {lessonLang === 'te' ? 'టాస్క్ / లక్ష్యం:' : 'Task / Goal:'}
+                </div>
+                <p className="text-sm text-ide-text font-normal">
+                  {lesson?.instructions || lesson?.description || "Follow the instructions and write the required code."}
+                </p>
               </div>
 
               <button
-                onClick={() => handleAskAI('Explain the challenge concept to me in simple terms.')}
+                onClick={() => handleAskAI('Explain this coding challenge concept to me in simple terms.')}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 text-xs font-bold transition-all"
               >
                 <Sparkles className="w-4 h-4" />
@@ -226,8 +262,8 @@ export default function InteractiveLessonView({
                     {showHint ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </button>
                   {showHint && (
-                    <div className="p-4 pt-0 text-xs text-teal-300 border-t border-ide-border/60 leading-relaxed">
-                      {lesson?.hint || "Use standard if / elif statements to test if op == '+', op == '-', op == '*', op == '/'."}
+                    <div className="p-4 pt-0 text-xs text-teal-300 border-t border-ide-border/60 leading-relaxed font-normal">
+                      {lesson?.hint || (lesson?.hints && lesson.hints[0]) || "Review the syntax rules and try writing the logic step by step."}
                     </div>
                   )}
                 </div>
@@ -241,7 +277,7 @@ export default function InteractiveLessonView({
           {/* Top Half: Code Editor */}
           <div className="h-3/5 flex flex-col border-b border-ide-border">
             <div className="h-10 bg-ide-panel border-b border-ide-border px-4 flex items-center justify-between text-xs text-ide-muted">
-              <span className="font-bold text-ide-text">Python 3</span>
+              <span className="font-bold text-ide-text capitalize">{lesson?.language || 'python'}</span>
               <div className="flex items-center gap-3">
                 <RotateCcw className="w-4 h-4 cursor-pointer hover:text-ide-text" title="Reset Code" onClick={() => setCode(lesson?.starterCode || '')} />
               </div>
@@ -250,9 +286,9 @@ export default function InteractiveLessonView({
             <div className="flex-1">
               <MonacoEditor
                 sessionId={sessionId}
-                filePath="main.py"
+                filePath={lesson?.language === 'javascript' ? 'main.js' : (lesson?.language === 'cpp' ? 'main.cpp' : 'main.py')}
                 content={code}
-                language="python"
+                language={lesson?.language || 'python'}
                 onChange={setCode}
               />
             </div>
@@ -335,21 +371,21 @@ export default function InteractiveLessonView({
                     <div>
                       <span className="text-[10px] uppercase font-bold text-ide-muted block mb-1">Input</span>
                       <pre className="p-3 bg-ide-panel rounded-xl border border-ide-border text-ide-text">
-                        {testResults[selectedTestCase].input}
+                        {testResults[selectedTestCase]?.input || '(None)'}
                       </pre>
                     </div>
 
                     <div>
                       <span className="text-[10px] uppercase font-bold text-ide-muted block mb-1">Actual Output</span>
                       <pre className="p-3 bg-ide-panel rounded-xl border border-ide-border text-cyan-300">
-                        {testResults[selectedTestCase].output || 'Click "Run Code" to view output'}
+                        {testResults[selectedTestCase]?.output || 'Click "Run Code" to view output'}
                       </pre>
                     </div>
 
                     <div>
                       <span className="text-[10px] uppercase font-bold text-ide-muted block mb-1">Expected Output</span>
                       <pre className="p-3 bg-ide-panel rounded-xl border border-ide-border text-emerald-400">
-                        {testResults[selectedTestCase].expected}
+                        {testResults[selectedTestCase]?.expected || '(None)'}
                       </pre>
                     </div>
                   </div>

@@ -1,0 +1,112 @@
+{
+  "slug": "py-f-m02-l02-numbers",
+  "course": "py-foundations",
+  "module": "m02-variables-types",
+  "type": "challenge",
+  "difficulty": 1,
+  "xp": 10,
+  "is_premium": false,
+  "outcome": "Student understands the difference between integers and floats and can perform basic math.",
+  "prerequisites": [
+    "py-f-m02-l01-variables"
+  ],
+  "content": {
+    "en": {
+      "title": "Numbers & Math",
+      "body_md": "Python has two main types of numbers:\n1. **Integer (int)**: Whole numbers like `10`, `-5`, `0`.\n2. **Float**: Decimal numbers like `3.14`, `-0.5`.\n\nYou can do math just like a calculator: `+`, `-`, `*` (multiply), `/` (divide).\n\n```python\nx = 10\ny = 3\nprint(x + y) # 13\nprint(x / y) # 3.3333333333333335\n```"
+    },
+    "te": {
+      "title": "నంబర్స్ మరియు మ్యాథ్స్",
+      "body_md": "Python లో రెండు రకాల ముఖ్యమైన నంబర్స్ ఉంటాయి:\n1. **Integer (int)**: పూర్ణాంకాలు (చీలికలు లేనివి), ఉదాహరణకు `10`, `-5`, `0`.\n2. **Float**: దశాంశాలు (Decimals), ఉదాహరణకు `3.14`, `-0.5`.\n\nమీరు క్యాలిక్యులేటర్ లాగా మ్యాథ్స్ చేయొచ్చు: `+`, `-`, `*` (multiply), `/` (divide).\n\n```python\nx = 10\ny = 3\nprint(x + y) # 13\nprint(x / y) # 3.3333333333333335\n```"
+    }
+  },
+  "try_it": "Change the math operator to * and run.",
+  "challenge": {
+    "language": "python",
+    "instructions_md": "Create a variable `a = 15` and `b = 4`. Create another variable `result` which is `a * b` (multiply). Print `result`.",
+    "starter_code": "a = 15\nb = 4\n# Task: multiply and print\n",
+    "solution_code": "a = 15\nb = 4\nresult = a * b\nprint(result)\n",
+    "time_limit_ms": 3000,
+    "tests": [
+      {
+        "stdin": "",
+        "expected": "60",
+        "hidden": false
+      },
+      {
+        "stdin": "a\n",
+        "expected": "60",
+        "hidden": false
+      },
+      {
+        "stdin": "b\n",
+        "expected": "60",
+        "hidden": false
+      },
+      {
+        "stdin": "c\n",
+        "expected": "60",
+        "hidden": true
+      },
+      {
+        "stdin": "d\n",
+        "expected": "60",
+        "hidden": true
+      }
+    ],
+    "wrong_solutions": [
+      {
+        "label": "wrong-math",
+        "code": "a = 15\nb = 4\nprint(a + b)\n"
+      },
+      {
+        "label": "print-string",
+        "code": "a = 15\nb = 4\nprint(\"a * b\")\n"
+      }
+    ],
+    "hints": [
+      "Use `*` to multiply `a` and `b`.",
+      "Write `result = a * b`.",
+      "Finally, write `print(result)`."
+    ]
+  },
+  "teaching_notes": "Mention division always results in float. No need for deeper explanation now, just integer vs float concept.",
+  "quiz": [
+    {
+      "qtype": "mcq_single",
+      "prompt_md": "Which of these is a Float?",
+      "options": [
+        {
+          "id": "a",
+          "text": "5"
+        },
+        {
+          "id": "b",
+          "text": "\"3.14\""
+        },
+        {
+          "id": "c",
+          "text": "4.2"
+        }
+      ],
+      "answer": [
+        "c"
+      ],
+      "explanation_md": "4.2 is a Float. \"3.14\" inside quotes is a String."
+    },
+    {
+      "qtype": "predict_output",
+      "prompt_md": "What prints?\n```python\nprint(5 * 2)\n```",
+      "answer": "10",
+      "explanation_md": "`*` means multiply."
+    }
+  ],
+  "recap": [
+    "Integers are whole numbers",
+    "Floats have decimals",
+    "Use * to multiply, / to divide"
+  ],
+  "common_mistakes": [
+    "Using quotes around numbers for math"
+  ]
+}

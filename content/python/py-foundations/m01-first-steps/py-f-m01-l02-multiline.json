@@ -1,0 +1,112 @@
+{
+  "slug": "py-f-m01-l02-multiline",
+  "course": "py-foundations",
+  "module": "m01-first-steps",
+  "type": "challenge",
+  "difficulty": 1,
+  "xp": 10,
+  "is_premium": false,
+  "outcome": "Student can use multiple print() statements to output text on separate lines.",
+  "prerequisites": [
+    "py-f-m01-l01-print"
+  ],
+  "content": {
+    "en": {
+      "title": "Printing Multiple Lines",
+      "body_md": "You can use the `print()` function multiple times. Each `print()` automatically starts on a new line.\n\nLike adding new pages to a book, every `print()` gives you a fresh line.\n\n```python\nprint(\"Line 1\")\nprint(\"Line 2\")\n```\nOutput:\n```\nLine 1\nLine 2\n```"
+    },
+    "te": {
+      "title": "మల్టిపుల్ లైన్స్ ప్రింట్ చేయడం",
+      "body_md": "మీరు `print()` ఫంక్షన్ ని ఎన్నిసార్లైనా వాడొచ్చు. ప్రతి `print()` ఆటోమేటిక్‌గా కొత్త లైన్‌లో (new line) అవుట్‌పుట్‌ను ఇస్తుంది.\n\nఒక పుస్తకంలో కొత్త పేజీలు యాడ్ చేసినట్లు, ప్రతి `print()` ఒక కొత్త లైన్ ఇస్తుంది.\n\n```python\nprint(\"Line 1\")\nprint(\"Line 2\")\n```\nఅవుట్‌పుట్:\n```\nLine 1\nLine 2\n```"
+    }
+  },
+  "try_it": "Try adding a third print() statement with your favorite food.",
+  "challenge": {
+    "language": "python",
+    "instructions_md": "Print exactly these two lines using two `print()` statements:\n`Apple`\n`Banana`",
+    "starter_code": "# Task: Print Apple on the first line\n# Task: Print Banana on the second line\n",
+    "solution_code": "print(\"Apple\")\nprint(\"Banana\")\n",
+    "time_limit_ms": 3000,
+    "tests": [
+      {
+        "stdin": "",
+        "expected": "Apple\nBanana",
+        "hidden": false
+      },
+      {
+        "stdin": "a\n",
+        "expected": "Apple\nBanana",
+        "hidden": false
+      },
+      {
+        "stdin": "b\n",
+        "expected": "Apple\nBanana",
+        "hidden": false
+      },
+      {
+        "stdin": "c\n",
+        "expected": "Apple\nBanana",
+        "hidden": true
+      },
+      {
+        "stdin": "d\n",
+        "expected": "Apple\nBanana",
+        "hidden": true
+      }
+    ],
+    "wrong_solutions": [
+      {
+        "label": "one-line",
+        "code": "print(\"Apple Banana\")\n"
+      },
+      {
+        "label": "wrong-caps",
+        "code": "print(\"apple\")\nprint(\"banana\")\n"
+      }
+    ],
+    "hints": [
+      "You need to use print() twice.",
+      "First print() should have \"Apple\", and the second should have \"Banana\".",
+      "Plan: Write print(\"Apple\") and on the next line write print(\"Banana\")."
+    ]
+  },
+  "teaching_notes": "Students might try to put everything in one print statement. Emphasize that multiple prints create multiple lines.",
+  "quiz": [
+    {
+      "qtype": "predict_output",
+      "prompt_md": "What prints?\n```python\nprint(\"A\")\nprint(\"B\")\n```",
+      "answer": "A\nB",
+      "explanation_md": "Each `print()` statement outputs on a new line."
+    },
+    {
+      "qtype": "mcq_single",
+      "prompt_md": "How many lines will three `print()` statements output?",
+      "options": [
+        {
+          "id": "a",
+          "text": "1 line"
+        },
+        {
+          "id": "b",
+          "text": "3 lines"
+        },
+        {
+          "id": "c",
+          "text": "0 lines"
+        }
+      ],
+      "answer": [
+        "b"
+      ],
+      "explanation_md": "Each `print()` gives one line, so three `print()`s give 3 lines."
+    }
+  ],
+  "recap": [
+    "Each print() starts a new line",
+    "Code runs from top to bottom"
+  ],
+  "common_mistakes": [
+    "Putting both words in one print()",
+    "Typo in the text"
+  ]
+}

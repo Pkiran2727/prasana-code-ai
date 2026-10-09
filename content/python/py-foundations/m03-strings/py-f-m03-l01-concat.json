@@ -1,0 +1,96 @@
+{
+  "slug": "py-f-m03-l01-concat",
+  "course": "py-foundations",
+  "module": "m03-strings",
+  "type": "challenge",
+  "difficulty": 2,
+  "xp": 15,
+  "is_premium": false,
+  "outcome": "Student can join strings using the + operator.",
+  "prerequisites": [
+    "py-f-m02-l03-input"
+  ],
+  "content": {
+    "en": {
+      "title": "Joining Strings (Concatenation)",
+      "body_md": "You can add two strings together using the `+` operator. This is called **concatenation**.\n\nLike gluing two pieces of paper together.\n\n```python\nword1 = \"Hello\"\nword2 = \"World\"\nprint(word1 + word2)       # HelloWorld\nprint(word1 + \" \" + word2) # Hello World\n```"
+    },
+    "te": {
+      "title": "స్ట్రింగ్స్ కలపడం (Concatenation)",
+      "body_md": "మీరు `+` ఆపరేటర్ వాడి రెండు స్ట్రింగ్స్ ని కలపవచ్చు. దీన్నే **concatenation** అంటారు.\n\nరెండు కాగితాలను గమ్‌తో అతికించినట్లు.\n\n```python\nword1 = \"Hello\"\nword2 = \"World\"\nprint(word1 + word2)       # HelloWorld\nprint(word1 + \" \" + word2) # Hello World\n```"
+    }
+  },
+  "try_it": "Change the space `\" \"` to a comma `\",\"`.",
+  "challenge": {
+    "language": "python",
+    "instructions_md": "Read a name using `input()`. Print exactly `Namaste, <name>!` using string concatenation `+`.",
+    "starter_code": "name = input()\n# Task: print \"Namaste, \" + name + \"!\"\n",
+    "solution_code": "name = input()\nprint(\"Namaste, \" + name + \"!\")\n",
+    "time_limit_ms": 3000,
+    "tests": [
+      {
+        "stdin": "Prasana\n",
+        "expected": "Namaste, Prasana!",
+        "hidden": false
+      },
+      {
+        "stdin": "Kiran\n",
+        "expected": "Namaste, Kiran!",
+        "hidden": false
+      },
+      {
+        "stdin": "India\n",
+        "expected": "Namaste, India!",
+        "hidden": true
+      },
+      {
+        "stdin": "World\n",
+        "expected": "Namaste, World!",
+        "hidden": true
+      },
+      {
+        "stdin": "AI\n",
+        "expected": "Namaste, AI!",
+        "hidden": true
+      }
+    ],
+    "wrong_solutions": [
+      {
+        "label": "hardcode",
+        "code": "print(\"Namaste, Prasana!\")\n"
+      },
+      {
+        "label": "missing-exclamation",
+        "code": "name = input()\nprint(\"Namaste, \" + name)\n"
+      }
+    ],
+    "hints": [
+      "You need to join three strings: `\"Namaste, \"`, `name`, and `\"!\"`.",
+      "Don't forget the spaces. `Namaste, ` is one complete string with a space at the end.",
+      "Write `print(\"Namaste, \" + name + \"!\")`."
+    ]
+  },
+  "teaching_notes": "Spacing is tricky. Students might miss the space after comma: 'Namaste,'.",
+  "quiz": [
+    {
+      "qtype": "predict_output",
+      "prompt_md": "What prints?\n```python\nprint(\"A\" + \"B\")\n```",
+      "answer": "AB",
+      "explanation_md": "`+` joins two strings exactly as they are without adding any extra spaces."
+    },
+    {
+      "qtype": "predict_output",
+      "prompt_md": "If user types `5`, what prints?\n```python\nx = input()\nprint(x + x)\n```",
+      "answer": "55",
+      "explanation_md": "`input()` always returns text (String). So \"5\" + \"5\" gives \"55\"."
+    }
+  ],
+  "recap": [
+    "Use + to join strings",
+    "Spaces must be added manually inside quotes",
+    "input() always gives a string"
+  ],
+  "common_mistakes": [
+    "Missing spaces inside the string quotes"
+  ]
+}

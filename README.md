@@ -7,7 +7,7 @@
 
 ## 🌟 Overview
 
-**Prasana Code AI** is a state-of-the-art interactive coding platform combining a high-performance cloud sandbox IDE, gamified curriculum tracks (Python, Web Dev, DSA, C++, AI), and an intelligent AI Tutor. Inspired by leading platforms like Coddy.tech and modern cloud IDEs, it provides immediate feedback, automated test execution, and hints without spoiling answers.
+**Prasana Code AI** is a state-of-the-art interactive coding platform combining a high-performance cloud sandbox IDE, gamified curriculum tracks (Python, Web Dev, DSA, C++, AI), and an intelligent AI Tutor. Inspired by modern cloud IDEs and interactive learning platforms, it provides immediate feedback, automated test execution, and hints without spoiling answers.
 
 ---
 

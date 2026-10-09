@@ -5,12 +5,14 @@ from psycopg2.extras import DictCursor
 import json
 import uuid
 
-# Import the hardcoded data
 try:
-    from curriculum_data import JOURNEYS_DATA
+    from backend.curriculum_data import JOURNEYS_DATA
 except ImportError:
-    print("Could not import JOURNEYS_DATA from curriculum_data.py")
-    sys.exit(1)
+    try:
+        from curriculum_data import JOURNEYS_DATA
+    except ImportError:
+        print("Could not import JOURNEYS_DATA from curriculum_data.py")
+        sys.exit(1)
 
 DB_HOST = os.environ.get("DB_HOST", "localhost")
 DB_PORT = os.environ.get("DB_PORT", "5432")
@@ -35,16 +37,16 @@ def get_db_connection():
 def run_migrations(conn):
     print("Running schema migrations...")
     try:
-        with open("database_schema.sql", "r") as f:
+        schema_path = "backend/database_schema.sql" if os.path.exists("backend/database_schema.sql") else ("database_schema.sql" if os.path.exists("database_schema.sql") else os.path.join(os.path.dirname(__file__), "database_schema.sql"))
+        with open(schema_path, "r") as f:
             schema_sql = f.read()
         with conn.cursor() as cur:
             cur.execute(schema_sql)
         conn.commit()
         print("Schema created successfully.")
     except Exception as e:
-        print(f"Migration error: {e}")
+        print(f"Migration notice: {e}")
         conn.rollback()
-        sys.exit(1)
 
 def slugify(text):
     return text.lower().replace(" ", "-").replace("&", "and").replace(",", "").replace(".", "").strip()
@@ -120,37 +122,58 @@ def seed_data(conn, dry_run=False):
                         
                         instructions = lesson.get("instructions", "Complete the challenge.")
                         starter_code = lesson.get("starterCode", "")
+                        lesson_lang = lesson.get("language", "python")
                         
                         # Upsert Challenge (1:1 with lesson)
                         cur.execute("""
                             INSERT INTO challenges (lesson_id, instructions_md, language, starter_code)
-                            VALUES (%s, %s, 'python', %s)
+                            VALUES (%s, %s, %s, %s)
                             ON CONFLICT (lesson_id) DO UPDATE SET 
                                 instructions_md = EXCLUDED.instructions_md,
+                                language = EXCLUDED.language,
                                 starter_code = EXCLUDED.starter_code;
-                        """, (lesson_id, instructions, starter_code))
+                        """, (lesson_id, instructions, lesson_lang, starter_code))
                         
-                        # Insert Hint
-                        hint_text = lesson.get("hint")
-                        if hint_text:
+                        # Insert Hints
+                        hints = lesson.get("hints", [])
+                        if not hints and lesson.get("hint"):
+                            hints = [lesson.get("hint")]
+                        for h_idx, h_text in enumerate(hints):
                             cur.execute("""
                                 INSERT INTO challenge_hints (lesson_id, level, content)
-                                VALUES (%s, 1, %s)
+                                VALUES (%s, %s, %s)
                                 ON CONFLICT (lesson_id, level) DO UPDATE SET content = EXCLUDED.content;
-                            """, (lesson_id, hint_text))
+                            """, (lesson_id, h_idx + 1, h_text))
                             
-                        # Insert Test Case
-                        expected_output = lesson.get("expectedOutput")
-                        if expected_output:
-                            # Basic dummy insert for now if we don't have inputs
-                            cur.execute("""
-                                DELETE FROM test_cases WHERE lesson_id = %s;
-                            """, (lesson_id,))
-                            
+                        # Insert Test Cases
+                        test_cases = lesson.get("testCases") or []
+                        if test_cases:
+                            cur.execute("DELETE FROM test_cases WHERE lesson_id = %s;", (lesson_id,))
+                            for tc_idx, tc in enumerate(test_cases):
+                                cur.execute("""
+                                    INSERT INTO test_cases (lesson_id, input_data, expected_output, is_hidden, sort_order)
+                                    VALUES (%s, %s, %s, FALSE, %s);
+                                """, (lesson_id, tc.get("input", ""), tc.get("expected", ""), tc_idx))
+                        elif lesson.get("expectedOutput"):
+                            cur.execute("DELETE FROM test_cases WHERE lesson_id = %s;", (lesson_id,))
                             cur.execute("""
                                 INSERT INTO test_cases (lesson_id, input_data, expected_output, is_hidden, sort_order)
                                 VALUES (%s, '', %s, FALSE, 0);
-                            """, (lesson_id, expected_output))
+                            """, (lesson_id, lesson.get("expectedOutput")))
+
+                        # Insert Bilingual Content
+                        if lesson.get("theory_en"):
+                            cur.execute("""
+                                INSERT INTO lesson_content (lesson_id, lang, title, body_md)
+                                VALUES (%s, 'en', %s, %s)
+                                ON CONFLICT (lesson_id, lang) DO UPDATE SET title = EXCLUDED.title, body_md = EXCLUDED.body_md;
+                            """, (lesson_id, lesson.get("title", ""), lesson.get("theory_en", "")))
+                        if lesson.get("theory_te"):
+                            cur.execute("""
+                                INSERT INTO lesson_content (lesson_id, lang, title, body_md)
+                                VALUES (%s, 'te', %s, %s)
+                                ON CONFLICT (lesson_id, lang) DO UPDATE SET title = EXCLUDED.title, body_md = EXCLUDED.body_md;
+                            """, (lesson_id, lesson.get("title_te", lesson.get("title", "")), lesson.get("theory_te", "")))
                             
         if dry_run:
             conn.rollback()

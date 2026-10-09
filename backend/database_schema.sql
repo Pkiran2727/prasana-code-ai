@@ -1,5 +1,14 @@
-CREATE TYPE lesson_type AS ENUM ('lesson', 'challenge');
-CREATE TYPE progress_status AS ENUM ('not_started', 'in_progress', 'completed');
+DO $$ BEGIN
+    CREATE TYPE lesson_type AS ENUM ('lesson', 'challenge');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+    CREATE TYPE progress_status AS ENUM ('not_started', 'in_progress', 'completed');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 CREATE TABLE IF NOT EXISTS categories (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -107,3 +116,93 @@ CREATE INDEX IF NOT EXISTS idx_lessons_module_order ON lessons (module_id, sort_
 CREATE INDEX IF NOT EXISTS idx_test_cases_lesson_order ON test_cases (lesson_id, sort_order);
 CREATE INDEX IF NOT EXISTS idx_user_progress_status ON user_progress (user_id, status);
 CREATE INDEX IF NOT EXISTS idx_submissions_user_lesson_time ON submissions (user_id, lesson_id, created_at DESC);
+
+-- Part 11 Additions
+ALTER TYPE lesson_type ADD VALUE IF NOT EXISTS 'concept';
+ALTER TYPE lesson_type ADD VALUE IF NOT EXISTS 'quiz';
+ALTER TYPE lesson_type ADD VALUE IF NOT EXISTS 'project';
+ALTER TYPE lesson_type ADD VALUE IF NOT EXISTS 'checkpoint';
+
+CREATE TABLE IF NOT EXISTS lesson_content (
+  lesson_id UUID REFERENCES lessons(id) ON DELETE CASCADE,
+  lang      TEXT NOT NULL DEFAULT 'en',
+  title     TEXT NOT NULL,
+  body_md   TEXT NOT NULL,
+  PRIMARY KEY (lesson_id, lang)
+);
+
+ALTER TABLE lessons
+  ADD COLUMN IF NOT EXISTS teaching_notes TEXT,
+  ADD COLUMN IF NOT EXISTS difficulty INT CHECK (difficulty BETWEEN 1 AND 5),
+  ADD COLUMN IF NOT EXISTS content_version INT NOT NULL DEFAULT 1;
+
+CREATE TABLE IF NOT EXISTS quiz_questions (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  lesson_id   UUID NOT NULL REFERENCES lessons(id) ON DELETE CASCADE,
+  qtype       TEXT NOT NULL CHECK (qtype IN ('mcq_single','mcq_multi','predict_output','reorder','fill_blank')),
+  prompt_md   TEXT NOT NULL,
+  options     JSONB,
+  answer      JSONB NOT NULL,
+  explanation_md TEXT NOT NULL,
+  sort_order  INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS roadmaps (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT UNIQUE NOT NULL, title TEXT NOT NULL, description TEXT,
+  sort_order INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS roadmap_courses (
+  roadmap_id UUID REFERENCES roadmaps(id) ON DELETE CASCADE,
+  course_id  UUID REFERENCES courses(id)  ON DELETE CASCADE,
+  position   INT NOT NULL,
+  PRIMARY KEY (roadmap_id, course_id)
+);
+
+CREATE TABLE IF NOT EXISTS ai_usage (
+  user_id UUID NOT NULL, day DATE NOT NULL, feature TEXT NOT NULL,
+  calls INT NOT NULL DEFAULT 0, tokens_in INT NOT NULL DEFAULT 0, tokens_out INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (user_id, day, feature)
+);
+
+CREATE TABLE IF NOT EXISTS ai_feedback (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL, lesson_id UUID, mode TEXT, model TEXT,
+  helpful BOOLEAN, created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS streaks (
+  user_id UUID PRIMARY KEY, current INT NOT NULL DEFAULT 0, longest INT NOT NULL DEFAULT 0,
+  last_active_date DATE, freezes_left INT NOT NULL DEFAULT 1
+);
+
+CREATE TABLE IF NOT EXISTS daily_activity (
+  user_id UUID NOT NULL, day DATE NOT NULL,
+  lessons_completed INT NOT NULL DEFAULT 0, xp INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (user_id, day)
+);
+
+CREATE TABLE IF NOT EXISTS daily_challenges (
+  day DATE PRIMARY KEY, lesson_id UUID NOT NULL REFERENCES lessons(id)
+);
+
+CREATE TABLE IF NOT EXISTS content_reports (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  lesson_id UUID NOT NULL REFERENCES lessons(id) ON DELETE CASCADE,
+  user_id UUID, kind TEXT, message TEXT, status TEXT NOT NULL DEFAULT 'open',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS certificates (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  verify_code TEXT UNIQUE NOT NULL,
+  user_id UUID NOT NULL, course_id UUID NOT NULL REFERENCES courses(id),
+  display_name TEXT NOT NULL, issued_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS challenge_wrong_solutions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  lesson_id UUID NOT NULL REFERENCES challenges(lesson_id) ON DELETE CASCADE,
+  label TEXT NOT NULL, code TEXT NOT NULL
+);
