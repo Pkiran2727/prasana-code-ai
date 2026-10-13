@@ -65,10 +65,15 @@ async def lifespan(app: FastAPI):
     except asyncio.CancelledError:
         pass
 
+ENV = os.getenv("ENVIRONMENT", "production")
+
 app = FastAPI(
     title="Prasana Code AI Backend API",
     description="Workspace session, curriculum, gamification, and payment API service for Prasana Code AI",
     version="1.0.0",
+    docs_url="/docs" if ENV == "development" else None,
+    redoc_url="/redoc" if ENV == "development" else None,
+    openapi_url="/openapi.json" if ENV == "development" else None,
     lifespan=lifespan
 )
 

@@ -5,13 +5,23 @@ from psycopg2.pool import ThreadedConnectionPool
 from psycopg2.extras import RealDictCursor
 from fastapi import Header, HTTPException, Depends
 
-_pool = ThreadedConnectionPool(1, 10, dsn=os.environ["DATABASE_URL"])
+_pool = None
+
+def get_pool():
+    global _pool
+    if _pool is None:
+        dsn = os.environ.get("DATABASE_URL")
+        if not dsn:
+            raise RuntimeError("DATABASE_URL environment variable is not set.")
+        _pool = ThreadedConnectionPool(1, 10, dsn=dsn)
+    return _pool
 
 
 @contextmanager
 def get_cursor():
     """ఒక transaction: success అయితే commit, error వస్తే rollback."""
-    conn = _pool.getconn()
+    pool = get_pool()
+    conn = pool.getconn()
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             yield cur
@@ -20,7 +30,7 @@ def get_cursor():
         conn.rollback()
         raise
     finally:
-        _pool.putconn(conn)
+        pool.putconn(conn)
 
 
 from backend.auth import get_current_user

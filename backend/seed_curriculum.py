@@ -17,7 +17,7 @@ except ImportError:
 DB_HOST = os.environ.get("DB_HOST", "localhost")
 DB_PORT = os.environ.get("DB_PORT", "5432")
 DB_USER = os.environ.get("DB_USER", "prasana_user")
-DB_PASS = os.environ.get("DB_PASS", "PrasanaSecureDBPassword2026")
+DB_PASS = os.environ.get("DB_PASS", "")
 DB_NAME = os.environ.get("DB_NAME", "prasana_code_ai")
 
 def get_db_connection():

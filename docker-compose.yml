@@ -7,11 +7,9 @@ services:
     container_name: prasana_code_ai_db
     restart: always
     environment:
-      POSTGRES_USER: prasana_user
-      POSTGRES_PASSWORD: PrasanaSecureDBPassword2026
-      POSTGRES_DB: prasana_code_ai
-    ports:
-      - "5432:5432"
+      POSTGRES_USER: ${POSTGRES_USER:-prasana_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres_dev_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-prasana_code_ai}
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -25,9 +23,9 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://prasana_user:PrasanaSecureDBPassword2026@database:5432/prasana_code_ai
-      - RAZORPAY_KEY_ID=${RAZORPAY_KEY_ID:-rzp_test_PrasanaCodeAIKey}
-      - RAZORPAY_KEY_SECRET=${RAZORPAY_KEY_SECRET:-PrasanaSecret12345}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-prasana_user}:${POSTGRES_PASSWORD:-postgres_dev_secret}@database:5432/${POSTGRES_DB:-prasana_code_ai}
+      - RAZORPAY_KEY_ID=${RAZORPAY_KEY_ID:-}
+      - RAZORPAY_KEY_SECRET=${RAZORPAY_KEY_SECRET:-}
     volumes:
       - ./backend:/app/backend
     depends_on:

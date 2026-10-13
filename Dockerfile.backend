@@ -21,7 +21,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy backend codebase and curriculum content
 COPY backend/ ./backend
 COPY content/ ./content
-COPY .env* ./
+
+# Create non-root user and ensure session directory permissions
+RUN useradd -m -u 1000 appuser && \
+    mkdir -p /app/backend/sessions && \
+    chown -R appuser:appuser /app
+
+USER appuser
 
 # Expose FastAPI backend port
 EXPOSE 8000

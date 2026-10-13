@@ -42,5 +42,15 @@ SUPPORTED_LANGUAGES = {
     "bash": "bash"
 }
 
-# CORS settings
-CORS_ORIGINS = ["*"]
+# CORS settings - strictly restrict origins to trusted domains, never wildcard
+_env_origins = os.getenv("CORS_ORIGINS", "")
+if _env_origins:
+    CORS_ORIGINS = [o.strip() for o in _env_origins.split(",") if o.strip() and o.strip() != "*"]
+else:
+    CORS_ORIGINS = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "https://prasanacode.ai",
+        "https://www.prasanacode.ai",
+    ]
