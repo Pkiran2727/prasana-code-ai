@@ -22,10 +22,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ ./backend
 COPY content/ ./content
 
-# Create non-root user and ensure session directory permissions
+# Create non-root user and ensure ONLY session workspace directory is writable
 RUN useradd -m -u 1000 appuser && \
     mkdir -p /app/backend/sessions && \
-    chown -R appuser:appuser /app
+    chown -R appuser:appuser /app/backend/sessions && \
+    chmod 700 /app/backend/sessions
 
 USER appuser
 

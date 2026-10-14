@@ -1,17 +1,3 @@
-"""
-RELEASE GATE for Prasana Code AI  -  "100% correct" ki definition.
-
-Run (from repo root, with a seeded Postgres):
-    export DATABASE_URL=postgresql://user:pass@host:5432/prasana_code_ai
-    pip install pytest
-    pytest tests/test_release_gate.py -v
-
-Rule: deploy cheyyadaniki ee file lo ALL tests PASS avvali (0 failed).
-Each test asserts the SECURE / CORRECT behaviour. On the audited commit (8403a0a) most of these FAIL.
-Tests that need a DB are skipped if DATABASE_URL is not set.
-Sandbox/file tests are most meaningful INSIDE the backend container:
-    docker compose exec backend pytest tests/test_release_gate.py -v
-"""
 import os, re, sys, glob, json, uuid, warnings, logging
 import pytest
 
@@ -25,6 +11,9 @@ for k in ("SUPABASE_URL", "SUPABASE_KEY", "RAZORPAY_KEY_ID", "RAZORPAY_KEY_SECRE
 
 HAS_DB = bool(os.environ.get("DATABASE_URL"))
 needs_db = pytest.mark.skipif(not HAS_DB, reason="DATABASE_URL not set")
+
+REPO_FILES = os.path.exists(os.path.join(ROOT, "docker-compose.yml")) and os.path.isdir(os.path.join(ROOT, "frontend"))
+needs_repo = pytest.mark.skipif(not REPO_FILES, reason="needs full repo checkout (run on host/CI from repo root)")
 
 def read(path):
     p = os.path.join(ROOT, path)
@@ -60,6 +49,7 @@ class TestAuth:
     def test_no_mock_token_bypass_in_code(self):
         assert "mock_token" not in read("backend/main.py") + read("backend/auth.py")
 
+    @needs_repo
     def test_frontend_has_no_fake_login(self):
         src = read("frontend/src/components/auth/LoginScreen.jsx")
         assert "google_oauth_token" not in src and "123456" not in src
@@ -91,6 +81,7 @@ class TestSandbox:
         r = run_code("x = bytearray(3 * 1024**3)\nprint('ALLOCATED')", "", 4000, "python")
         assert "ALLOCATED" not in r["stdout"]
 
+    @needs_repo
     def test_dockerfile_does_not_bake_env_and_not_root(self):
         d = read("Dockerfile.backend")
         assert not re.search(r"COPY\s+\.env", d) and re.search(r"^\s*USER\s+(?!root)", d, re.M)
@@ -145,6 +136,13 @@ class TestDatabase:
 
     def test_telugu_content_seeded(self, cur):
         cur.execute("select count(*) from lesson_content where lang='te'"); assert cur.fetchone()[0] >= 10
+
+    def test_rls_enabled_on_all_public_tables(self, cur):
+        """Supabase exposes public tables via its REST API (anon key). Without RLS, solution_code / hidden tests leak."""
+        cur.execute("""select c.relname from pg_class c join pg_namespace n on n.oid=c.relnamespace
+                       where n.nspname='public' and c.relkind='r' and not c.relrowsecurity""")
+        missing = [r[0] for r in cur.fetchall()]
+        assert not missing, f"RLS disabled on: {missing}"
 
     def test_catalog_metadata_matches_reality(self):
         from backend.curriculum_data import JOURNEYS_DATA as J
@@ -236,9 +234,11 @@ class TestPayments:
                         json={"plan_id": "lifetime", "amount": 1, "user_email": "a@b.com"})
         assert r.status_code >= 400 or r.json().get("amount") != 1
 
+    @needs_repo
     def test_razorpay_in_requirements(self):
         assert "razorpay" in read("requirements.txt").lower()
 
+    @needs_repo
     def test_no_hardcoded_default_razorpay_secret(self):
         assert "PrasanaSecret12345" not in read("backend/payment_routes.py") + read("docker-compose.yml") + read("backend/config.py")
 
@@ -248,10 +248,12 @@ class TestPayments:
 
 # ------------------------------------------------------------------ 7. SECRETS / INFRA
 class TestInfra:
+    @needs_repo
     def test_no_password_in_compose_or_seed_defaults(self):
         t = read("docker-compose.yml") + read("backend/seed_curriculum.py") + read(".env.example")
         assert "PrasanaSecureDBPassword2026" not in t
 
+    @needs_repo
     def test_db_port_not_public(self):
         assert not re.search(r'^\s*-\s*"?5432:5432"?', read("docker-compose.yml"), re.M)
 
@@ -263,24 +265,47 @@ class TestInfra:
         code = "".join(read(p) for p in ("backend/auth.py", "backend/main.py", "backend/config.py", "backend/payment_routes.py"))
         assert "mandaprasannakiran" not in code
 
+    @needs_repo
     def test_dockerignore_excludes_env(self):
         assert re.search(r"^\.env", read(".dockerignore"), re.M)
 
+    def test_docs_disabled_outside_development(self):
+        assert "docs_url" in read("backend/main.py")
+
+# ------------------------------------------------------------------ 7b. AI TUTOR (Mitra)
+class TestTutor:
+    def test_irrelevant_tools_removed(self):
+        src = read("backend/agent.py")
+        bad = [t for t in ("get_weather", "get_stock", "get_crypto", "read_url") if t in src]
+        assert not bad, f"tutor still has tools: {bad}"
+
+    def test_prompt_does_not_hand_out_full_solution(self):
+        assert "unless they explicitly ask" not in read("backend/agent.py")
+
+    def test_ai_quota_exists(self):
+        code = "".join(open(f, encoding="utf-8", errors="ignore").read()
+                       for f in glob.glob(os.path.join(ROOT, "backend", "*.py")))
+        assert "ai_usage" in code, "no per-user AI quota (ai_usage) found"
+
 # ------------------------------------------------------------------ 8. FRONTEND / BRAND
 class TestFrontend:
+    @needs_repo
     def test_no_localhost_in_frontend(self):
         hits = [f for f in glob.glob(os.path.join(ROOT, "frontend/src/**/*.js*"), recursive=True) if "localhost:8000" in open(f, encoding="utf-8").read()]
         assert not hits, hits
 
+    @needs_repo
     def test_brand_uniform(self):
         files = [os.path.join(ROOT, "frontend/index.html")] + glob.glob(os.path.join(ROOT, "frontend/src/**/*.js*"), recursive=True)
         hits = [f for f in files if "LiveCodeAI" in open(f, encoding="utf-8").read()]
         assert not hits, hits
 
+    @needs_repo
     def test_lesson_view_uses_server_grading(self):
         src = read("frontend/src/components/views/InteractiveLessonView.jsx")
         assert "/submit" in src and "/api/verify-solution" not in src
 
+    @needs_repo
     def test_upi_qr_is_url_encoded(self):
         src = read("frontend/src/components/views/PricingView.jsx")
         assert "api.qrserver.com" not in src or "encodeURIComponent" in src
