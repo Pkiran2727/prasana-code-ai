@@ -50,6 +50,16 @@ export async function loginApi(email, password) {
   return data;
 }
 
+export async function getOAuthUrlApi(provider) {
+  const redirectUrl = window.location.origin;
+  const response = await fetch(`${API_BASE_URL}/auth/oauth/${provider}?redirect_to=${encodeURIComponent(redirectUrl)}`);
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || 'Failed to initiate OAuth.');
+  }
+  return await response.json();
+}
+
 /**
  * Logs out user by clearing storage.
  */
@@ -227,8 +237,8 @@ export async function pingEngagementApi(sessionId) {
  */
 export function getWebSocketUrl(sessionId) {
   const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  const token = localStorage.getItem("access_token") || "mock_token";
-  const suffix = `?token=${encodeURIComponent(token)}`;
+  const token = localStorage.getItem("access_token");
+  const suffix = token ? `?token=${encodeURIComponent(token)}` : '';
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
     return `${wsProtocol}//${window.location.hostname}:${PORT}/ws/${sessionId}${suffix}`;
   }

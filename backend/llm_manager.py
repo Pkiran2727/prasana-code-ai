@@ -14,7 +14,7 @@ GLM_API_KEY = os.environ.get("GLM_API_KEY", "")
 GLM_BASE_URL = "https://api.z.ai/api/paas/v4/"
 GLM_MODEL_NAME = "glm-4.7-Flash"
 
-ALERT_EMAIL_TARGET = "mandaprasannakiran@gmail.com"
+ALERT_EMAIL_TARGET = os.environ.get("ALERT_EMAIL_TARGET", "")
 ALERTS_LOG_PATH = os.path.join(BASE_DIR, "backend", "alerts.log")
 
 def log_and_send_email_alert(subject: str, body_text: str, send_email: bool = True):

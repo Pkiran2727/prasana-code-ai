@@ -116,10 +116,6 @@ CREATE TABLE IF NOT EXISTS user_profiles (
   created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-INSERT INTO user_profiles (id, email, role, plan, total_xp)
-VALUES ('00000000-0000-0000-0000-000000000001', 'guest@prasanacode.ai', 'user', 'free', 0)
-ON CONFLICT (id) DO NOTHING;
-
 CREATE INDEX IF NOT EXISTS idx_modules_course_order ON modules (course_id, sort_order);
 CREATE INDEX IF NOT EXISTS idx_lessons_module_order ON lessons (module_id, sort_order);
 CREATE INDEX IF NOT EXISTS idx_test_cases_lesson_order ON test_cases (lesson_id, sort_order);

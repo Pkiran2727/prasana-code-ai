@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
-import { loginApi, registerApi } from '../../api/agentApi';
-import { Shield, User, Lock, Mail, ArrowRight, Code2, AlertCircle, Phone, X } from 'lucide-react';
+import { loginApi, registerApi, getOAuthUrlApi } from '../../api/agentApi';
+import { Shield, User, Lock, Mail, ArrowRight, Code2, AlertCircle, X } from 'lucide-react';
 
 export default function LoginScreen({ onLoginSuccess, onClose }) {
-  const [authMode, setAuthMode] = useState('email'); // 'email' | 'google' | 'phone'
+  const [authMode, setAuthMode] = useState('email'); // 'email'
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [phone, setPhone] = useState('');
-  const [otp, setOtp] = useState('');
-  const [otpSent, setOtpSent] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -20,22 +17,6 @@ export default function LoginScreen({ onLoginSuccess, onClose }) {
     setLoading(true);
 
     try {
-      if (authMode === 'phone') {
-        if (!otpSent) {
-          if (!phone || phone.length < 10) throw new Error('Please enter a valid 10-digit mobile number.');
-          setOtpSent(true);
-          setLoading(false);
-          return;
-        } else {
-          if (otp !== '123456' && otp.length < 4) throw new Error('Invalid OTP code. Use 123456 for test login.');
-          localStorage.setItem("access_token", "mock_phone_token");
-          localStorage.setItem("user_email", `${phone}@mobile.prasana`);
-          localStorage.setItem("user_role", "user");
-          onLoginSuccess();
-          return;
-        }
-      }
-
       if (isRegister) {
         await registerApi(email, password);
         await loginApi(email, password);
@@ -53,14 +34,20 @@ export default function LoginScreen({ onLoginSuccess, onClose }) {
     }
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
+    setError('');
     setLoading(true);
-    setTimeout(() => {
-      localStorage.setItem("access_token", "google_oauth_token");
-      localStorage.setItem("user_email", "prasannakiran27@gmail.com");
-      localStorage.setItem("user_role", "admin");
-      onLoginSuccess();
-    }, 800);
+    try {
+      const data = await getOAuthUrlApi('google');
+      if (data && data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('Could not obtain Google authentication URL.');
+      }
+    } catch (err) {
+      setError(err.message || 'Failed to initialize Google authentication.');
+      setLoading(false);
+    }
   };
 
   return (
@@ -100,102 +87,39 @@ export default function LoginScreen({ onLoginSuccess, onClose }) {
             </svg>
             <span>Continue with Gmail / Google</span>
           </button>
-
-          <div className="flex bg-ide-panel rounded-xl p-1 border border-ide-border">
-            <button
-              onClick={() => setAuthMode('email')}
-              className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
-                authMode === 'email' ? 'bg-ide-sidebar text-ide-text shadow-sm' : 'text-ide-muted hover:text-ide-text'
-              }`}
-            >
-              Email Login
-            </button>
-            <button
-              onClick={() => setAuthMode('phone')}
-              className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
-                authMode === 'phone' ? 'bg-ide-sidebar text-ide-text shadow-sm' : 'text-ide-muted hover:text-ide-text'
-              }`}
-            >
-              Mobile OTP
-            </button>
-          </div>
         </div>
-
-        {/* Error Alert */}
-        {error && (
-          <div className="mb-4 p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl flex items-center gap-2 text-rose-400 text-xs">
-            <AlertCircle className="w-4 h-4 shrink-0" />
-            <span>{error}</span>
-          </div>
-        )}
 
         {/* Form Inputs */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          {authMode === 'email' ? (
-            <>
-              <div>
-                <label className="block text-[11px] font-bold text-ide-muted uppercase tracking-wider mb-1">Email Address</label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 w-4 h-4 text-ide-muted" />
-                  <input
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@example.com"
-                    className="w-full bg-ide-panel border border-ide-border rounded-xl py-2.5 pl-10 pr-4 text-xs text-ide-text focus:outline-none focus:border-emerald-500"
-                  />
-                </div>
-              </div>
+          <div>
+            <label className="block text-[11px] font-bold text-ide-muted uppercase tracking-wider mb-1">Email Address</label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-3 w-4 h-4 text-ide-muted" />
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                className="w-full bg-ide-panel border border-ide-border rounded-xl py-2.5 pl-10 pr-4 text-xs text-ide-text focus:outline-none focus:border-emerald-500"
+              />
+            </div>
+          </div>
 
-              <div>
-                <label className="block text-[11px] font-bold text-ide-muted uppercase tracking-wider mb-1">Password</label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 w-4 h-4 text-ide-muted" />
-                  <input
-                    type="password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full bg-ide-panel border border-ide-border rounded-xl py-2.5 pl-10 pr-4 text-xs text-ide-text focus:outline-none focus:border-emerald-500"
-                  />
-                </div>
-              </div>
-            </>
-          ) : (
-            <>
-              <div>
-                <label className="block text-[11px] font-bold text-ide-muted uppercase tracking-wider mb-1">Mobile Number</label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-3 w-4 h-4 text-ide-muted" />
-                  <input
-                    type="tel"
-                    required
-                    disabled={otpSent}
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="Enter 10-digit mobile number"
-                    className="w-full bg-ide-panel border border-ide-border rounded-xl py-2.5 pl-10 pr-4 text-xs text-ide-text focus:outline-none focus:border-emerald-500"
-                  />
-                </div>
-              </div>
-
-              {otpSent && (
-                <div>
-                  <label className="block text-[11px] font-bold text-ide-muted uppercase tracking-wider mb-1">Enter OTP (Test: 123456)</label>
-                  <input
-                    type="text"
-                    required
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    placeholder="123456"
-                    className="w-full bg-ide-panel border border-ide-border rounded-xl py-2.5 px-4 text-xs text-emerald-300 font-mono tracking-widest text-center focus:outline-none focus:border-emerald-500"
-                  />
-                </div>
-              )}
-            </>
-          )}
+          <div>
+            <label className="block text-[11px] font-bold text-ide-muted uppercase tracking-wider mb-1">Password</label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-3 w-4 h-4 text-ide-muted" />
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full bg-ide-panel border border-ide-border rounded-xl py-2.5 pl-10 pr-4 text-xs text-ide-text focus:outline-none focus:border-emerald-500"
+              />
+            </div>
+          </div>
 
           <button
             type="submit"
@@ -206,11 +130,7 @@ export default function LoginScreen({ onLoginSuccess, onClose }) {
               <span className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
             ) : (
               <>
-                <span>
-                  {authMode === 'phone'
-                    ? otpSent ? 'Verify OTP & Log In' : 'Send OTP Code'
-                    : isRegister ? 'Create Account' : 'Log In'}
-                </span>
+                <span>{isRegister ? 'Create Account' : 'Log In'}</span>
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
@@ -218,16 +138,14 @@ export default function LoginScreen({ onLoginSuccess, onClose }) {
         </form>
 
         {/* Register Toggle */}
-        {authMode === 'email' && (
-          <div className="mt-4 text-center">
-            <button
-              onClick={() => setIsRegister(!isRegister)}
-              className="text-xs text-emerald-400 hover:underline font-medium"
-            >
-              {isRegister ? 'Already have an account? Sign In' : "Don't have an account? Register Free"}
-            </button>
-          </div>
-        )}
+        <div className="mt-4 text-center">
+          <button
+            onClick={() => setIsRegister(!isRegister)}
+            className="text-xs text-emerald-400 hover:underline font-medium"
+          >
+            {isRegister ? 'Already have an account? Sign In' : "Don't have an account? Register Free"}
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -9,8 +9,8 @@ export default function PricingView({ userEmail }) {
   const [showUpiModal, setShowUpiModal] = useState(false);
   const [txnRef, setTxnRef] = useState('');
 
-  // Default UPI ID for Personal Savings Account Settlement
-  const personalUpiId = "mandaprasannakiran@gmail";
+  // Business UPI ID from environment or config
+  const businessUpiId = import.meta.env.VITE_UPI_ID || "";
 
   const plans = [
     {
@@ -125,7 +125,7 @@ export default function PricingView({ userEmail }) {
           description: `Subscription for ${plan.name}`,
           order_id: data.order_id,
           handler: async function (response) {
-            await fetch('http://localhost:8000/api/payment/verify-payment', {
+            await fetch(`${API_BASE_URL}/api/payment/verify-payment`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -294,11 +294,11 @@ export default function PricingView({ userEmail }) {
             {/* QR Code Container */}
             <div className="my-6 p-4 rounded-2xl bg-white flex flex-col items-center justify-center shadow-inner">
               <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=${personalUpiId}&pn=Prasana%20Code%20AI&am=${selectedPlan.numericPrice}&cu=INR`}
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=${businessUpiId}&pn=Prasana%20Code%20AI&am=${selectedPlan.numericPrice}&cu=INR`)}`}
                 alt="UPI QR Code"
                 className="w-44 h-44 rounded-lg"
               />
-              <p className="text-black font-mono text-xs font-extrabold mt-2">UPI ID: {personalUpiId}</p>
+              {businessUpiId && <p className="text-black font-mono text-xs font-extrabold mt-2">UPI ID: {businessUpiId}</p>}
             </div>
 
             {/* Form */}

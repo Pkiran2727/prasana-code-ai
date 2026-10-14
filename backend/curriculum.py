@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
-from backend.db import get_cursor, get_current_user_id
+from typing import Optional
+from backend.db import get_cursor, get_current_user_id, get_optional_user_id
 from backend.entitlement import user_has_premium, get_profile, EFFECTIVE_PREMIUM_SQL
 from backend import progress_service as ps
 
@@ -21,7 +22,7 @@ def _accessible_lesson(cur, lesson_id: str, user_id: str):
 
 
 @router.get("/catalog")
-def catalog(user_id: str = Depends(get_current_user_id)):
+def catalog(user_id: Optional[str] = Depends(get_optional_user_id)):
     with get_cursor() as cur:
         cur.execute("SELECT id, slug, title, description FROM categories ORDER BY sort_order")
         cats = cur.fetchall()
@@ -45,13 +46,13 @@ def catalog(user_id: str = Depends(get_current_user_id)):
 
 
 @router.get("/courses/{slug}")
-def course_outline(slug: str, user_id: str = Depends(get_current_user_id)):
+def course_outline(slug: str, user_id: Optional[str] = Depends(get_optional_user_id)):
     with get_cursor() as cur:
         cur.execute("SELECT id, slug, title, description FROM courses WHERE slug=%s AND is_published", (slug,))
         course = cur.fetchone()
         if not course:
             raise HTTPException(404, "Course not found")
-        premium = user_has_premium(get_profile(cur, user_id))
+        premium = user_has_premium(get_profile(cur, user_id)) if user_id else False
         cur.execute(f"""
             SELECT m.id AS module_id, m.title AS module_title,
                    l.id, l.slug, l.title, l.type, l.xp_reward,

@@ -34,17 +34,27 @@ def get_cursor():
 
 
 from backend.auth import get_current_user
+from fastapi import HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import Optional
 
-security_optional = HTTPBearer(auto_error=False)
+security = HTTPBearer(auto_error=False)
 
-def get_current_user_id(credentials: Optional[HTTPAuthorizationCredentials] = Depends(security_optional)) -> str:
-    """Uses the auth module if token present, or returns default guest ID."""
+def get_current_user_id(credentials: Optional[HTTPAuthorizationCredentials] = Depends(security)) -> str:
+    """Uses the auth module to validate user token. Fails closed with 401 if missing or invalid."""
+    if credentials:
+        user = get_current_user(credentials)
+        return user["id"]
+    raise HTTPException(status_code=401, detail="Authentication required. Please log in.")
+
+def get_optional_user_id(credentials: Optional[HTTPAuthorizationCredentials] = Depends(security)) -> Optional[str]:
+    """Allows anonymous/public access (returns None), but resolves user_id if valid bearer token provided."""
     if credentials:
         try:
             user = get_current_user(credentials)
             return user["id"]
         except Exception:
-            pass
-    return "00000000-0000-0000-0000-000000000001"
+            return None
+    return None
+
+

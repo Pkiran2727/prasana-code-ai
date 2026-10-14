@@ -15,7 +15,7 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
     Fails closed: strictly rejects mock tokens, empty tokens, and invalid signatures.
     """
     token = credentials.credentials
-    if not token or token == "mock_token":
+    if not token or not token.strip():
         raise HTTPException(status_code=401, detail="Authentication required. Please log in.")
         
     if not supabase:
@@ -88,3 +88,18 @@ async def login(payload: dict):
     except Exception as e:
         logger.error(f"Sign in error: {e}")
         raise HTTPException(status_code=401, detail="Invalid email or password.")
+
+@router.get("/oauth/{provider}")
+async def get_oauth_url(provider: str, redirect_to: str = None):
+    if not supabase:
+        raise HTTPException(status_code=503, detail="Authentication service unavailable.")
+    try:
+        options = {}
+        if redirect_to:
+            options["redirect_to"] = redirect_to
+        res = supabase.auth.get_oauth_sign_in_url(provider, options=options)
+        return {"url": res.url if hasattr(res, "url") else str(res)}
+    except Exception as e:
+        logger.error(f"OAuth URL error: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+

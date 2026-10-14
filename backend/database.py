@@ -137,29 +137,28 @@ def list_user_files(user_id: str) -> list:
 # --- DB Profiles & Engagement Logging ---
 
 # In-memory stores for local fallback mode
-mock_user_profiles = [{"email": "mandaprasannakiran@gmail.com", "role": "admin"}]
+mock_user_profiles = []
 mock_engagement_logs = []
 mock_audit_logs = []
 
 def get_user_role(user_email: str) -> str:
-    """Returns 'admin' or 'user' based on email/profile mapping."""
+    """Returns role based on user_profiles DB role, defaulting to 'user'."""
     if not supabase:
-        # Local fallback based on email pattern
-        role = "admin" if user_email == "mandaprasannakiran@gmail.com" else "user"
-        if not any(u["email"] == user_email for u in mock_user_profiles):
-            mock_user_profiles.append({"id": f"mock_u_{len(mock_user_profiles)+1}", "email": user_email, "role": role})
-        return role
+        # Local fallback
+        for u in mock_user_profiles:
+            if u.get("email") == user_email:
+                return u.get("role", "user")
+        return "user"
 
     try:
-        # Query user_profiles table
+        # Query user_profiles table strictly by role column
         res = supabase.table("user_profiles").select("role").eq("email", user_email).execute()
-        if res.data:
-            return res.data[0]["role"]
+        if res.data and len(res.data) > 0:
+            return res.data[0].get("role", "user")
         
-        # Default profile creation
-        role = "admin" if user_email == "mandaprasannakiran@gmail.com" else "user"
-        supabase.table("user_profiles").insert({"email": user_email, "role": role}).execute()
-        return role
+        # New profile created as 'user' role
+        supabase.table("user_profiles").insert({"email": user_email, "role": "user"}).execute()
+        return "user"
     except Exception as e:
         logger.error(f"Error fetching user role: {e}")
         return "user"

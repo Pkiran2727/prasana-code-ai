@@ -246,17 +246,26 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str, token: str =
         await websocket.close(code=4004)
         return
         
-    # Check JWT Ownership if Supabase is active
-    if supabase and token and token != "mock_token":
+    # Enforce authentication and session ownership verification
+    owner_id = get_user_id_for_session(session_id)
+    if owner_id:
+        if not token:
+            logger.warning(f"WebSocket rejected for session {session_id}: missing auth token")
+            await websocket.close(code=4001)
+            return
+        if not supabase:
+            logger.error("Supabase not configured, rejecting authenticated WebSocket")
+            await websocket.close(code=4003)
+            return
         try:
             user_res = supabase.auth.get_user(token)
             user = user_res.user
-            owner_id = get_user_id_for_session(session_id)
-            if owner_id and owner_id != user.id:
+            if not user or user.id != owner_id:
+                logger.warning(f"WebSocket forbidden: user {getattr(user, 'id', None)} is not owner {owner_id}")
                 await websocket.close(code=4003)
                 return
         except Exception as e:
-            logger.error(f"WebSocket auth failed: {e}")
+            logger.error(f"WebSocket auth validation failed: {e}")
             await websocket.close(code=4002)
             return
 
