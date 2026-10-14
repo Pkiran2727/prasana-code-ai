@@ -106,10 +106,19 @@ CREATE TABLE IF NOT EXISTS submissions (          -- history / analytics / anti-
   created_at   TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Note: Ensure user_profiles has plan, plan_expires_at, total_xp 
--- ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS plan TEXT NOT NULL DEFAULT 'free';
--- ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS plan_expires_at TIMESTAMPTZ;
--- ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS total_xp INT NOT NULL DEFAULT 0;
+CREATE TABLE IF NOT EXISTS user_profiles (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email           TEXT UNIQUE,
+  role            TEXT NOT NULL DEFAULT 'user',
+  plan            TEXT NOT NULL DEFAULT 'free',
+  plan_expires_at TIMESTAMPTZ,
+  total_xp        INT NOT NULL DEFAULT 0,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+INSERT INTO user_profiles (id, email, role, plan, total_xp)
+VALUES ('00000000-0000-0000-0000-000000000001', 'guest@prasanacode.ai', 'user', 'free', 0)
+ON CONFLICT (id) DO NOTHING;
 
 CREATE INDEX IF NOT EXISTS idx_modules_course_order ON modules (course_id, sort_order);
 CREATE INDEX IF NOT EXISTS idx_lessons_module_order ON lessons (module_id, sort_order);

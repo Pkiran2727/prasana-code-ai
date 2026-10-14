@@ -4,22 +4,33 @@ import logging
 from backend.session_manager import get_session_path, get_user_id_for_session
 from backend.database import save_user_file, delete_user_file
 
+import urllib.parse
+from pathlib import Path
+
 logger = logging.getLogger("backend.files")
 
 def secure_resolve_path(session_id: str, relative_path: str) -> str:
     """Resolves a relative path within the session directory and ensures no directory traversal."""
-    session_path = get_session_path(session_id)
+    session_root = Path(get_session_path(session_id)).resolve()
     
-    # Strip any leading slashes or dot-dot components
-    cleaned_path = relative_path.lstrip("/").replace("../", "").replace("..\\", "")
-    abs_target_path = os.path.abspath(os.path.join(session_path, cleaned_path))
+    # URL decode any percent-encoded characters (e.g. %2e%2e%2f)
+    decoded_path = urllib.parse.unquote(relative_path).lstrip("/\\")
     
-    # Verify that the target path is strictly inside the session directory
-    if not abs_target_path.startswith(session_path):
-        logger.warning(f"Traversals detected! session={session_id}, path={relative_path}")
+    # Resolve target path strictly
+    target_path = (session_root / decoded_path).resolve()
+    
+    # Verify target_path is strictly inside session_root
+    try:
+        target_path.relative_to(session_root)
+    except ValueError:
+        logger.warning(f"Traversal attempt blocked! session={session_id}, path={relative_path}")
         raise PermissionError("Access denied: path is outside the session workspace.")
         
-    return abs_target_path
+    if os.path.commonpath([str(session_root), str(target_path)]) != str(session_root):
+        logger.warning(f"Traversal attempt blocked by commonpath! session={session_id}, path={relative_path}")
+        raise PermissionError("Access denied: path is outside the session workspace.")
+        
+    return str(target_path)
 
 def list_files(session_id: str) -> list:
     """Returns a hierarchical directory structure list of all files and folders."""
