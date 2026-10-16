@@ -11,15 +11,6 @@ import os
 
 router = APIRouter(prefix="/api", tags=["curriculum"])
 
-from backend.progress_service import run_code as sandbox_run_code
-
-class VerifySolutionRequest(BaseModel):
-    session_id: Optional[str] = "default_session"
-    code: str
-    language: Optional[str] = "python"
-    expected_output: str
-    stdin: Optional[str] = ""
-
 @router.get("/journeys")
 def get_journeys():
     """Returns all learning journeys with embedded courses & lesson metadata."""
@@ -45,27 +36,3 @@ def get_problem_by_id(problem_id: str):
     if not problem:
         raise HTTPException(status_code=404, detail="Problem not found")
     return {"status": "success", "problem": problem}
-
-@router.post("/verify-solution")
-async def verify_solution(req: VerifySolutionRequest):
-    """
-    Executes student code securely in sandbox and checks if stdout matches expected output.
-    Supports stdin, timeout, stderr, and multiple programming languages.
-    """
-    lang = req.language or "python"
-    result = sandbox_run_code(req.code, req.stdin or "", 3000, language=lang)
-    actual_stdout = (result.get("stdout") or "").rstrip()
-    expected = (req.expected_output or "").rstrip()
-    
-    passed = (actual_stdout == expected) and not result.get("stderr") and not result.get("timed_out")
-    
-    return {
-        "status": "success",
-        "passed": passed,
-        "actual_output": result.get("stdout", ""),
-        "expected_output": req.expected_output,
-        "stderr": result.get("stderr", ""),
-        "exit_code": 0 if not result.get("stderr") else 1,
-        "timed_out": result.get("timed_out", False),
-        "runtime_ms": result.get("runtime_ms", 0)
-    }

@@ -13,7 +13,7 @@
   "content": {
     "en": {
       "title": "Numbers & Math",
-      "body_md": "Python has two main types of numbers:\n1. **Integer (int)**: Whole numbers like `10`, `-5`, `0`.\n2. **Float**: Decimal numbers like `3.14`, `-0.5`.\n\nYou can do math just like a calculator: `+`, `-`, `*` (multiply), `/` (divide).\n\n```python\nx = 10\ny = 3\nprint(x + y) # 13\nprint(x / y) # 3.3333333333333335\n```"
+      "body_md": "Python is widely admired for its exceptional mathematical computation capabilities and clean numeric syntax. At its core, Python categorizes numbers into two primary data types: integers `int` and floating-point numbers `float`. Integers represent whole numbers with zero fractional part, such as ten, negative five, or zero. In contrast, floats represent decimal numbers like three point one four.\n\nYou can execute standard arithmetic operations seamlessly using familiar mathematical operator symbols: addition `+`, subtraction `-`, multiplication `*`, and division `/`.\n\n```python\nx = 10\ny = 3\nprint(x + y) # 13\nprint(x / y) # 3.3333333333333335\n```\n\nNotice that dividing two integers using `/` in Python always produces a floating-point result, preserving exact mathematical precision. You can combine multiple mathematical operations in complex expressions, adhering to standard algebraic operator precedence rules. These fundamental numeric types empower engineers to perform financial accounting, game physics, scientific analytics, and high-frequency algorithms accurately. Mastering basic mathematical operators unlocks the foundation for statistical data exploration, automated financial spreadsheets, and game physics simulations in Python."
     },
     "te": {
       "title": "నంబర్స్ మరియు మ్యాథ్స్",
@@ -32,26 +32,6 @@
         "stdin": "",
         "expected": "60",
         "hidden": false
-      },
-      {
-        "stdin": "a\n",
-        "expected": "60",
-        "hidden": false
-      },
-      {
-        "stdin": "b\n",
-        "expected": "60",
-        "hidden": false
-      },
-      {
-        "stdin": "c\n",
-        "expected": "60",
-        "hidden": true
-      },
-      {
-        "stdin": "d\n",
-        "expected": "60",
-        "hidden": true
       }
     ],
     "wrong_solutions": [
@@ -68,6 +48,12 @@
       "Use `*` to multiply `a` and `b`.",
       "Write `result = a * b`.",
       "Finally, write `print(result)`."
+    ],
+    "fixed_output": true,
+    "hints_te": [
+      "రెండు సంఖ్యలను గుణించడానికి * గుర్తును ఉపయోగించండి.",
+      "మల్టిప్లికేషన్ కోసం: result = a * b అని రాయండి.",
+      "ప్లాన్: print(result) అని రాసి రన్ చేయండి."
     ]
   },
   "teaching_notes": "Mention division always results in float. No need for deeper explanation now, just integer vs float concept.",
@@ -98,7 +84,8 @@
       "qtype": "predict_output",
       "prompt_md": "What prints?\n```python\nprint(5 * 2)\n```",
       "answer": "10",
-      "explanation_md": "`*` means multiply."
+      "explanation_md": "5 multiplied by 2 equals 10.",
+      "code": "print(5 * 2)"
     }
   ],
   "recap": [

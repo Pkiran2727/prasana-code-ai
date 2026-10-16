@@ -13,7 +13,7 @@
   "content": {
     "en": {
       "title": "String Indexing",
-      "body_md": "Every character in a string has a position number called an **index**. In Python, counting starts at **0**.\n\nFor the string `\"PYTHON\"`:\n`P` is at index 0\n`Y` is at index 1\n`T` is at index 2\n\nYou access it using square brackets `[]`.\n\n```python\nword = \"PYTHON\"\nprint(word[0]) # Prints P\nprint(word[2]) # Prints T\n```"
+      "body_md": "Strings in Python are ordered sequences of individual characters. Every character in a string occupies a specific numerical slot known as its index. In Python, as in most contemporary programming languages, indexing starts at zero rather than one. Therefore, the very first character of any string is located at index zero, the second character sits at index one, and so on.\n\nYou extract an individual character from a string by appending square brackets `[]` containing the desired index number to your variable name.\n\n```python\nword = \"PYTHON\"\nprint(word[0]) # Prints P\nprint(word[2]) # Prints T\n```\n\nPython also supports negative indexing, allowing you to access characters from the end of the string backward, where negative one refers to the final character. Understanding zero-based indexing is foundational for traversing strings, lists, arrays, and complex data structures. By targeting precise positions within strings, you can parse encoded file formats, extract initials, and inspect specific symbols effortlessly. Direct character lookups provide immediate precision when parsing credit card masks, validating area codes, or inspecting file extensions."
     },
     "te": {
       "title": "స్ట్రింగ్ ఇండెక్సింగ్ (String Indexing)",
@@ -68,6 +68,12 @@
       "What is the index for the second character?",
       "In Python, counting starts from 0, so the second letter has an index of 1.",
       "Print `word[1]`."
+    ],
+    "fixed_output": false,
+    "hints_te": [
+      "పైథాన్‌లో ఇండెక్సింగ్ ఎల్లప్పుడూ 0 తో ప్రారంభమవుతుంది.",
+      "రెండవ అక్షరం కోసం ఇండెక్స్ 1 ని వాడాలి.",
+      "ప్లాన్: word[1] ని print() లోపల ఉంచి ప్రింట్ చేయండి."
     ]
   },
   "teaching_notes": "Very common to use [2] for the second character. Emphasize zero-based indexing.",
@@ -76,7 +82,8 @@
       "qtype": "predict_output",
       "prompt_md": "What prints?\n```python\nword = \"CODE\"\nprint(word[3])\n```",
       "answer": "E",
-      "explanation_md": "C=0, O=1, D=2, E=3."
+      "explanation_md": "C is at 0, O is at 1, D is at 2, and E is at index 3.",
+      "code": "word = \"CODE\"\nprint(word[3])"
     },
     {
       "qtype": "mcq_single",

@@ -90,13 +90,36 @@ def run_code(code: str, stdin: str, timeout_ms: int, language: str = "python") -
                     "runtime_ms": int((time.time() - start) * 1000)
                 }
 
+            import resource
+
+            def _sandbox_preexec():
+                # Enforce memory containment (512MB max address space)
+                try:
+                    limit = 512 * 1024 * 1024
+                    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))
+                except Exception:
+                    pass
+
+            # Scrub server environment variables: student code only receives minimal runtime vars
+            clean_env = {
+                "PATH": os.environ.get("PATH", "/usr/local/bin:/usr/bin:/bin"),
+                "LANG": "C.UTF-8",
+                "LC_ALL": "C.UTF-8",
+                "PYTHONIOENCODING": "utf-8",
+                "PYTHONUNBUFFERED": "1",
+                "HOME": tmpdir,
+                "TMPDIR": tmpdir
+            }
+
             proc = subprocess.run(
                 cmd,
                 input=stdin or "",
                 capture_output=True,
                 text=True,
                 timeout=timeout_sec,
-                cwd=tmpdir
+                cwd=tmpdir,
+                env=clean_env,
+                preexec_fn=_sandbox_preexec
             )
             return {
                 "stdout": proc.stdout,

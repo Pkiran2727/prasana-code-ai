@@ -1,4 +1,4 @@
-// API client for LiveCodeAI backend services
+// API client for Prasana Code AI backend services
 const PORT = 8000;
 export const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? `http://${window.location.hostname}:${PORT}`

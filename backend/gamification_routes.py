@@ -17,13 +17,6 @@ def get_leaderboard():
     """Returns global XP & streak leaderboard."""
     return {"status": "success", "leaderboard": MOCK_LEADERBOARD}
 
-@router.post("/award-xp")
-def award_xp(payload: dict):
-    """Awards XP to user upon completing a lesson or problem."""
-    amount = payload.get("xp", 10)
-    USER_STATS["xp"] += amount
-    return {"status": "success", "new_xp": USER_STATS["xp"]}
-
 @router.get("/certificates")
 def get_certificates():
     """Returns user verified certificates."""

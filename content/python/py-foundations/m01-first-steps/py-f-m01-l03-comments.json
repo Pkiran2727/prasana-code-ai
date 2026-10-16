@@ -13,7 +13,7 @@
   "content": {
     "en": {
       "title": "Comments in Code",
-      "body_md": "Sometimes you want to write notes in your code for yourself or other humans. Python ignores anything that starts with `#`. These are called **comments**.\n\nIt's like a sticky note on a document. The reader sees it, but it's not part of the official text.\n\n```python\n# This is a comment. Python ignores it.\nprint(\"Hello\") # Prints Hello\n```"
+      "body_md": "As your computer programs grow in complexity, writing notes to explain your thought process becomes incredibly valuable for yourself and your teammates. In Python, you can leave helpful human-readable notes called comments by prefixing any line with the hash character `#`. Whenever the Python interpreter encounters a `#` symbol, it completely disregards every single character on that line following it.\n\nThink of comments like handy yellow sticky notes attached to a formal legal contract; human readers find them illuminating, but the official legal logic ignores them entirely.\n\n```python\n# This is a helpful comment. Python ignores it.\nprint(\"Hello\") # Prints Hello\n```\n\nComments are widely used in professional software engineering to document tricky algorithms, leave reminders, temporarily disable pieces of code during debugging sessions, and explain why specific implementation decisions were made in the codebase. Clear documentation ensures long-term software maintainability, allowing future contributors to comprehend legacy business requirements swiftly without tedious guesswork or accidental regression bugs. Professional engineering teams establish standard code review conventions to ensure comments clarify complex domain knowledge effectively."
     },
     "te": {
       "title": "కోడ్‌లో కామెంట్స్ (Comments)",
@@ -32,26 +32,6 @@
         "stdin": "",
         "expected": "Python is fun!",
         "hidden": false
-      },
-      {
-        "stdin": "a\n",
-        "expected": "Python is fun!",
-        "hidden": false
-      },
-      {
-        "stdin": "b\n",
-        "expected": "Python is fun!",
-        "hidden": false
-      },
-      {
-        "stdin": "c\n",
-        "expected": "Python is fun!",
-        "hidden": true
-      },
-      {
-        "stdin": "d\n",
-        "expected": "Python is fun!",
-        "hidden": true
       }
     ],
     "wrong_solutions": [
@@ -68,6 +48,12 @@
       "Comments must start with a `#` symbol.",
       "Write `# My first comment` at the beginning.",
       "On the next line, write `print(\"Python is fun!\")`."
+    ],
+    "fixed_output": true,
+    "hints_te": [
+      "పైథాన్‌లో కామెంట్స్ ఎల్లప్పుడూ # గుర్తుతో మొదలవుతాయి.",
+      "మొదటి లైన్‌లో # My first comment అని రాయండి.",
+      "తర్వాత లైన్‌లో print(\"Python is fun!\") అని రాయండి."
     ]
   },
   "teaching_notes": "Students might put the comment inside a print() statement. Clarify that comments are not printed to the output console.",
@@ -98,7 +84,8 @@
       "qtype": "predict_output",
       "prompt_md": "What prints?\n```python\n# print(\"Hi\")\nprint(\"Bye\")\n```",
       "answer": "Bye",
-      "explanation_md": "The first line is a comment, so Python completely ignores it."
+      "explanation_md": "The first line is commented out, so only Bye prints.",
+      "code": "# print(\"Hi\")\nprint(\"Bye\")"
     }
   ],
   "recap": [

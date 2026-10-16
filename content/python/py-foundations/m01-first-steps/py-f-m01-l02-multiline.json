@@ -13,7 +13,7 @@
   "content": {
     "en": {
       "title": "Printing Multiple Lines",
-      "body_md": "You can use the `print()` function multiple times. Each `print()` automatically starts on a new line.\n\nLike adding new pages to a book, every `print()` gives you a fresh line.\n\n```python\nprint(\"Line 1\")\nprint(\"Line 2\")\n```\nOutput:\n```\nLine 1\nLine 2\n```"
+      "body_md": "In Python, you are never restricted to printing a single line of text. You can execute multiple `print()` statements in sequence, and Python will process each one in exact top-to-bottom order. By default, every call to `print()` automatically appends an invisible newline character at the end of its output, meaning the next statement prints on a fresh line below it.\n\nImagine flipping to a brand-new page in a notebook every single time you jot down another thought or sentence.\n\n```python\nprint(\"Line 1\")\nprint(\"Line 2\")\n```\n\nWhen run, this produces two separate lines of text cleanly aligned in the terminal console. You can print multiple sentences, numbered lists, recipes, ASCII art shapes, or tabular figures simply by placing consecutive `print()` calls inside your Python source file. Mastering multiline output allows you to structure readable and informative reports for your users effortlessly. This structured presentation forms the core user experience of modern command-line developer tools and interactive terminal interfaces."
     },
     "te": {
       "title": "మల్టిపుల్ లైన్స్ ప్రింట్ చేయడం",
@@ -32,26 +32,6 @@
         "stdin": "",
         "expected": "Apple\nBanana",
         "hidden": false
-      },
-      {
-        "stdin": "a\n",
-        "expected": "Apple\nBanana",
-        "hidden": false
-      },
-      {
-        "stdin": "b\n",
-        "expected": "Apple\nBanana",
-        "hidden": false
-      },
-      {
-        "stdin": "c\n",
-        "expected": "Apple\nBanana",
-        "hidden": true
-      },
-      {
-        "stdin": "d\n",
-        "expected": "Apple\nBanana",
-        "hidden": true
       }
     ],
     "wrong_solutions": [
@@ -68,6 +48,12 @@
       "You need to use print() twice.",
       "First print() should have \"Apple\", and the second should have \"Banana\".",
       "Plan: Write print(\"Apple\") and on the next line write print(\"Banana\")."
+    ],
+    "fixed_output": true,
+    "hints_te": [
+      "రెండు వేర్వేరు లైన్లలో ప్రింట్ చేయడానికి రెండు print() స్టేట్‌మెంట్లు వాడండి.",
+      "మొదటి print() లో Apple మరియు రెండవ print() లో Banana రాయండి.",
+      "ప్లాన్: print(\"Apple\") తర్వాత print(\"Banana\") అని రాయండి."
     ]
   },
   "teaching_notes": "Students might try to put everything in one print statement. Emphasize that multiple prints create multiple lines.",
@@ -76,7 +62,8 @@
       "qtype": "predict_output",
       "prompt_md": "What prints?\n```python\nprint(\"A\")\nprint(\"B\")\n```",
       "answer": "A\nB",
-      "explanation_md": "Each `print()` statement outputs on a new line."
+      "explanation_md": "Each print() prints on a new line.",
+      "code": "print(\"A\")\nprint(\"B\")"
     },
     {
       "qtype": "mcq_single",

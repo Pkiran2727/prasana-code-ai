@@ -150,7 +150,7 @@ export default function PricingView({ userEmail }) {
         rzp.open();
       } else {
         setTimeout(async () => {
-          await fetch('http://localhost:8000/api/payment/verify-payment', {
+          await fetch(`${API_BASE_URL}/api/payment/verify-payment`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

@@ -93,7 +93,7 @@ export default function AdminMonitor({ onClose }) {
           </button>
           <div className="flex items-center gap-2">
             <span className="h-2.5 w-2.5 rounded-full bg-purple-500 animate-pulse" />
-            <h1 className="text-lg font-bold tracking-wide">LiveCodeAI Security Monitor</h1>
+            <h1 className="text-lg font-bold tracking-wide">Prasana Code AI Security Monitor</h1>
           </div>
         </div>
 

@@ -13,7 +13,7 @@
   "content": {
     "en": {
       "title": "Taking User Input",
-      "body_md": "Programs are interactive! You can ask the user for data using `input()`. The program pauses, waits for the user to type something, and then reads it as text.\n\n```python\nname = input()\nprint(\"Hello\")\nprint(name)\n```\nIf you type `Raju`, it prints Hello and then Raju."
+      "body_md": "Real-world computer applications are inherently interactive; they respond dynamically to information provided by real human users. In Python, you prompt and accept user data from the terminal console using the built-in `input()` function. Whenever Python encounters `input()`, it temporarily pauses script execution, waits patiently for the user to type on their keyboard, and resumes once they press the Enter key.\n\nThink of `input()` as handing a microphone to someone in the audience and waiting for them to say their answer.\n\n```python\nname = input()\nprint(\"Hello\")\nprint(name)\n```\n\nA critical concept to remember is that `input()` always captures and returns the user's typed data as a string data type, even if the person typed numeric digits like forty-two. You can store this incoming text directly into variables and process it throughout your application. By capturing user intent through input streams, your applications can deliver personalized feedback, process online orders, and build interactive dialogs. Real-time keyboard input forms the fundamental bridge between algorithmic calculations and responsive user-driven terminal software."
     },
     "te": {
       "title": "యూజర్ ఇన్‌పుట్ (User Input)",
@@ -68,6 +68,12 @@
       "Call the input() function and assign it to a variable.",
       "Write `color = input()`.",
       "Use print(color)."
+    ],
+    "fixed_output": false,
+    "hints_te": [
+      "యూజర్ నుంచి ఇన్‌పుట్ తీసుకోవడానికి input() ఫంక్షన్ వాడండి.",
+      "కలర్ కోసం: color = input() అని అసైన్ చేయండి.",
+      "చివరగా స్క్రీన్‌పై చూపించడానికి print(color) అని రాయండి."
     ]
   },
   "teaching_notes": "Students commonly hardcode the answer instead of using input(). Ensure tests cover different inputs.",
@@ -98,7 +104,9 @@
       "qtype": "predict_output",
       "prompt_md": "If user types `5`, what prints?\n```python\nx = input()\nprint(x)\n```",
       "answer": "5",
-      "explanation_md": "It will print `5` as typed by the user."
+      "explanation_md": "input() captures what user typed, and print(x) prints 5.",
+      "code": "x = input()\nprint(x)",
+      "stdin": "5\n"
     }
   ],
   "recap": [

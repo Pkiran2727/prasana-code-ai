@@ -13,7 +13,7 @@
   "content": {
     "en": {
       "title": "Creating Variables",
-      "body_md": "A **variable** is like a labeled box where you can store data. You create a variable using the `=` sign. The name is on the left, and the data is on the right.\n\nThink of it as putting a sticker named \"age\" on a box containing the number 20.\n\n```python\nage = 20\nname = \"Prasana\"\nprint(age)\nprint(name)\n```"
+      "body_md": "In computer science and software development, a variable acts like a durable labeled storage container that holds data inside the computer's memory. To assign information to a variable in Python, you use the single equals sign `=`, which is known as the assignment operator. The descriptive variable name is always written on the left side, while the actual data value you want to store belongs on the right side.\n\nThink of sticking a neat printed label saying 'age' onto a cardboard storage box and placing the number twenty safely inside it.\n\n```python\nage = 20\nname = \"Prasana\"\nprint(age)\nprint(name)\n```\n\nOnce a variable has been defined, you can reference it anywhere in your code, pass it to functions like `print()`, or update its stored value as your program executes its business logic. Descriptive variable names make your code expressive and maintainable. Choosing intuitive identifiers helps other programmers immediately recognize what kind of information each container holds during runtime execution."
     },
     "te": {
       "title": "వేరియబుల్స్ (Variables) క్రియేట్ చేయడం",
@@ -32,26 +32,6 @@
         "stdin": "",
         "expected": "Hyderabad",
         "hidden": false
-      },
-      {
-        "stdin": "a\n",
-        "expected": "Hyderabad",
-        "hidden": false
-      },
-      {
-        "stdin": "b\n",
-        "expected": "Hyderabad",
-        "hidden": false
-      },
-      {
-        "stdin": "c\n",
-        "expected": "Hyderabad",
-        "hidden": true
-      },
-      {
-        "stdin": "d\n",
-        "expected": "Hyderabad",
-        "hidden": true
       }
     ],
     "wrong_solutions": [
@@ -68,6 +48,12 @@
       "The variable name goes on the left, and the value goes on the right. Example: `city = \"value\"`.",
       "Write `city = \"Hyderabad\"`.",
       "Pass the variable name to the print() function: `print(city)`."
+    ],
+    "fixed_output": true,
+    "hints_te": [
+      "వేరియబుల్ పేరు ఎడమ వైపున, దాని విలువ కుడి వైపున రాయండి.",
+      "సిటీ కోసం: city = \"Hyderabad\" అని డిక్లేర్ చేయండి.",
+      "చివరగా ఆ వేరియబుల్‌ని print(city) ద్వారా ప్రింట్ చేయండి."
     ]
   },
   "teaching_notes": "Common mistake: writing 'Hyderabad' = city. Emphasize left-to-right assignment. Also print(\"city\") instead of print(city).",
@@ -98,7 +84,8 @@
       "qtype": "predict_output",
       "prompt_md": "What prints?\n```python\nx = \"Apple\"\nprint(\"x\")\n```",
       "answer": "x",
-      "explanation_md": "If you put `\"x\"` inside quotes, it prints the letter 'x' literally, not the variable's value."
+      "explanation_md": "Because \"x\" is inside quotes, the letter x prints, not Apple.",
+      "code": "x = \"Apple\"\nprint(\"x\")"
     }
   ],
   "recap": [

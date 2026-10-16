@@ -13,7 +13,7 @@
   "content": {
     "en": {
       "title": "f-Strings (Formatted Strings)",
-      "body_md": "Using `+` to join strings can be messy. Python has a superpower called **f-strings**. Just put an `f` before the quotes, and put your variables inside `{}`.\n\n```python\nname = \"Prasana\"\nage = 20\n\n# Messy:\nprint(\"My name is \" + name + \" and I am \" + str(age))\n\n# Clean (f-string):\nprint(f\"My name is {name} and I am {age}\")\n```"
+      "body_md": "While the plus operator works for simple concatenation, assembling complex sentences with numerous variables and numbers quickly becomes messy and error-prone. To solve this problem elegantly, modern Python introduced formatted string literals, affectionately known as f-strings. To construct an f-string, you simply place the letter `f` immediately before the opening quotation mark of your string literal.\n\nInside an f-string, any variable name or Python expression wrapped in curly braces `{}` is automatically evaluated and converted to readable text.\n\n```python\nname = \"Prasana\"\nage = 20\n# Clean f-string:\nprint(f\"My name is {name} and I am {age}\")\n```\n\nF-strings are significantly faster, vastly more readable, and reduce punctuation clutter. Professional Python developers rely heavily on f-strings for creating logs, formatted output tables, and user notifications throughout production applications. Adopting f-strings elevates code readability and adheres to clean programming practices advocated across modern Python development teams worldwide. Modern web frameworks, data engineering pipelines, and cloud microservices adopt f-strings universally to format database queries, status reports, and structured console messages quickly."
     },
     "te": {
       "title": "f-Strings (సులభంగా టెక్స్ట్ ఫార్మాటింగ్)",
@@ -68,6 +68,12 @@
       "Put an 'f' right before the string quotes inside print().",
       "Variables must be placed inside {} braces.",
       "Write it like: f\"The weather in {city} is {weather}.\""
+    ],
+    "fixed_output": false,
+    "hints_te": [
+      "కొటేషన్ల ముందు చిన్న అక్షరం f ని ఉంచండి.",
+      "వేరియబుల్స్ ని కర్లీ బ్రేసెస్ {} లోపల రాయాలి.",
+      "ప్లాన్: f\"The weather in {city} is {weather}.\" అని రాయండి."
     ]
   },
   "teaching_notes": "Students might forget the 'f' before the quotes. The output will literally be '{city}'.",
@@ -98,7 +104,8 @@
       "qtype": "predict_output",
       "prompt_md": "What prints?\n```python\nitem = \"Car\"\nprint(\"I bought a {item}\")\n```",
       "answer": "I bought a {item}",
-      "explanation_md": "Because the `f` is missing, it is treated as a regular string."
+      "explanation_md": "Without the 'f' prefix, {item} is treated literally.",
+      "code": "item = \"Car\"\nprint(\"I bought a {item}\")"
     }
   ],
   "recap": [

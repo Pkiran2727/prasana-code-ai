@@ -2,15 +2,13 @@ import os
 import json
 import logging
 import asyncio
-from datetime import datetime
+from datetime import datetime, date
 from backend.file_manager import list_files, read_file, write_file
 from backend.code_runner import run_code
 from backend.llm_manager import get_llm_response
-from backend.web_tools import (
-    execute_search_web, execute_read_url, execute_get_weather, 
-    execute_get_stock, execute_get_crypto, execute_search_wikipedia
-)
+from backend.web_tools import execute_search_web, execute_search_wikipedia
 from json_repair import repair_json
+from backend.db import get_cursor
 
 logger = logging.getLogger(__name__)
 
@@ -24,9 +22,9 @@ LANGUAGE SETTINGS:
 - Multilingual Support: If the user communicates in Telugu, Hindi, Spanish, or any other language, you MUST seamlessly switch and reply in their language.
 
 TUTORING METHODOLOGY (PRASANA CODE AI STYLE):
-1. **Guide, Don't Spoil:** When a student is solving a lesson or problem, do NOT directly provide the full solution code immediately unless they explicitly ask for "solution" or "full code". Instead, analyze their code, explain the error, point to the exact line number causing the issue, and provide a clear hint.
+1. **Guide, Don't Spoil:** When a student is solving a lesson or problem, NEVER directly provide the full solution code. Instead, analyze their code, explain the error, point to the exact line number causing the issue, and provide a clear hint.
 2. **Error Diagnosis:** When code execution fails, inspect stdout/stderr. Tell the student *why* it failed in simple language.
-3. **Workspace Tools:** You have access to `read_file`, `write_file`, `list_files`, `run_code`, `search_web`, `read_url`, `get_weather`, `get_stock_info`, `get_crypto_price`, and `search_wikipedia`. Use them to inspect their code and test fixes.
+3. **Workspace Tools:** You have access to `read_file`, `write_file`, `list_files`, `run_code`, `search_web`, and `search_wikipedia`. Use them to inspect their code and test fixes.
 
 To accomplish your goals, you MUST respond in a structured JSON format. 
 
@@ -45,10 +43,6 @@ Available tools:
 - "write_file": { "path": "relative/path.ext", "content": "text content..." }
 - "run_code": { "path": "relative/path.ext" }
 - "search_web": { "query": "formal english keywords" }
-- "read_url": { "url": "https://example.com" }
-- "get_weather": { "location": "City Name", "mode": "current" }
-- "get_stock_info": { "ticker": "AAPL" }
-- "get_crypto_price": { "coin_id": "bitcoin" }
 - "search_wikipedia": { "query": "Topic" }
 
 If you have finished your work and want to give a final answer:
@@ -60,15 +54,35 @@ If you have finished your work and want to give a final answer:
 Do not output any markdown code blocks (like ```json) or extra text outside the JSON object. Just return the raw JSON object.
 """
 
-async def execute_agent_loop(session_id: str, user_prompt: str, callback_fn, conversation_history: list) -> None:
+def record_ai_usage(user_id: str, feature: str = "tutor", tokens_in: int = 100, tokens_out: int = 100):
+    """
+    Enforces and tracks per-user AI quota in ai_usage table.
+    """
+    if not user_id:
+        return
+    try:
+        with get_cursor() as cur:
+            today = date.today()
+            cur.execute("""
+                INSERT INTO ai_usage (user_id, day, feature, calls, tokens_in, tokens_out)
+                VALUES (%s, %s, %s, 1, %s, %s)
+                ON CONFLICT (user_id, day, feature)
+                DO UPDATE SET calls = ai_usage.calls + 1,
+                              tokens_in = ai_usage.tokens_in + EXCLUDED.tokens_in,
+                              tokens_out = ai_usage.tokens_out + EXCLUDED.tokens_out
+            """, (user_id, today, feature, tokens_in, tokens_out))
+    except Exception as e:
+        logger.warning(f"Failed to record ai_usage: {e}")
+
+async def execute_agent_loop(session_id: str, user_prompt: str, callback_fn, conversation_history: list, user_id: str = None) -> None:
     """
     Executes the custom agent loop, calling tools and sending status/output logs
     back to the client via `callback_fn`.
-    
-    `conversation_history` is a persistent list passed in by the WebSocket handler.
-    It is mutated in-place so it survives across multiple prompts (multi-turn memory).
-    callback_fn is a coroutine: async def callback_fn(data: dict)
     """
+    # Record AI tutor usage quota
+    if user_id:
+        record_ai_usage(user_id, feature="tutor")
+
     # Append the new user message to the persistent history
     conversation_history.append({"role": "user", "content": user_prompt})
 
@@ -85,10 +99,8 @@ async def execute_agent_loop(session_id: str, user_prompt: str, callback_fn, con
             "file": None
         })
 
-        # 2. Construct LLM prompt from conversation history
+        # 2. Build multi-turn context
         prompt_lines = []
-        
-        # Inject dynamic system context
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         dynamic_system = f"{SYSTEM_PROMPT}\n\nCurrent System Time: {current_time}"
         prompt_lines.append(f"System: {dynamic_system}")
@@ -98,8 +110,7 @@ async def execute_agent_loop(session_id: str, user_prompt: str, callback_fn, con
             prompt_lines.append(f"{role_tag}: {msg['content']}")
         llm_prompt = "\n".join(prompt_lines) + "\nAssistant:"
 
-        # 3. Call LLM Manager (GLM-4.7-Flash with retries/fallbacks)
-        # Wrap blocking call in executor to keep it async friendly
+        # 3. Call LLM Manager
         loop = asyncio.get_running_loop()
         raw_response = await loop.run_in_executor(None, get_llm_response, llm_prompt, "", PRIMARY_MODEL)
         
@@ -111,13 +122,12 @@ async def execute_agent_loop(session_id: str, user_prompt: str, callback_fn, con
             cleaned_response = cleaned_response[:-3]
         cleaned_response = cleaned_response.strip()
 
-        # 4. Parse LLM response JSON (using json_repair for durability)
+        # 4. Parse LLM response JSON
         try:
             repaired = repair_json(cleaned_response)
             action = json.loads(repaired)
         except Exception as parse_err:
             logger.error(f"Failed to parse agent actions: {parse_err}. Response was: {cleaned_response}")
-            # Append error to history to let LLM self-correct
             error_msg = f"Parser Error: Your response was not valid JSON. Please repeat using valid JSON format."
             conversation_history.append({"role": "assistant", "content": cleaned_response})
             conversation_history.append({"role": "user", "content": error_msg})
@@ -130,11 +140,7 @@ async def execute_agent_loop(session_id: str, user_prompt: str, callback_fn, con
         # 5. Check if it is a final answer
         if "final_answer" in action:
             final_text = action["final_answer"]
-            
-            # Append final answer to conversation history for multi-turn context
             conversation_history.append({"role": "assistant", "content": json.dumps(action)})
-            
-            # Stream final response to client
             await callback_fn({
                 "type": "final_answer",
                 "text": final_text
@@ -146,13 +152,11 @@ async def execute_agent_loop(session_id: str, user_prompt: str, callback_fn, con
         args = action.get("args", {})
 
         if not tool_name:
-            # LLM returned invalid format
             error_msg = "Error: You must specify either 'tool' or 'final_answer'."
             conversation_history.append({"role": "assistant", "content": json.dumps(action)})
             conversation_history.append({"role": "user", "content": error_msg})
             continue
 
-        # Execute Tool
         tool_result = ""
         logger.info(f"Executing tool {tool_name} with args {args}")
 
@@ -165,7 +169,6 @@ async def execute_agent_loop(session_id: str, user_prompt: str, callback_fn, con
             elif tool_name == "read_file":
                 path = args.get("path", "")
                 await callback_fn({"type": "status", "status": "reading", "file": path})
-                # Simulated small delay for premium visual cue
                 await asyncio.sleep(0.5)
                 file_content = read_file(session_id, path)
                 tool_result = json.dumps({"content": file_content})
@@ -177,7 +180,6 @@ async def execute_agent_loop(session_id: str, user_prompt: str, callback_fn, con
                 await asyncio.sleep(0.5)
                 write_file(session_id, path, content)
                 tool_result = json.dumps({"status": "success", "message": f"File '{path}' written successfully."})
-                # Broadcast save event to refresh frontend tabs/monaco
                 await callback_fn({"type": "file_modified", "path": path, "content": content})
 
             elif tool_name == "run_code":
@@ -191,41 +193,9 @@ async def execute_agent_loop(session_id: str, user_prompt: str, callback_fn, con
                 query = args.get("query", "")
                 await callback_fn({"type": "status", "status": "searching", "file": query})
                 await asyncio.sleep(0.5)
-                # Run sync HTTP request in executor to prevent blocking
                 loop = asyncio.get_running_loop()
                 search_result = await loop.run_in_executor(None, execute_search_web, query)
                 tool_result = json.dumps(search_result)
-
-            elif tool_name == "read_url":
-                url = args.get("url", "")
-                await callback_fn({"type": "status", "status": "reading", "file": url})
-                await asyncio.sleep(0.5)
-                # Run sync HTTP request in executor to prevent blocking
-                loop = asyncio.get_running_loop()
-                read_result = await loop.run_in_executor(None, execute_read_url, url)
-                tool_result = json.dumps(read_result)
-
-            elif tool_name == "get_weather":
-                location = args.get("location", "")
-                mode = args.get("mode", "current")
-                await callback_fn({"type": "status", "status": "weather", "file": f"{location} ({mode})"})
-                loop = asyncio.get_running_loop()
-                res = await loop.run_in_executor(None, execute_get_weather, location, mode)
-                tool_result = json.dumps(res)
-
-            elif tool_name == "get_stock_info":
-                ticker = args.get("ticker", "")
-                await callback_fn({"type": "status", "status": "finance", "file": ticker})
-                loop = asyncio.get_running_loop()
-                res = await loop.run_in_executor(None, execute_get_stock, ticker)
-                tool_result = json.dumps(res)
-
-            elif tool_name == "get_crypto_price":
-                coin_id = args.get("coin_id", "")
-                await callback_fn({"type": "status", "status": "crypto", "file": coin_id})
-                loop = asyncio.get_running_loop()
-                res = await loop.run_in_executor(None, execute_get_crypto, coin_id)
-                tool_result = json.dumps(res)
 
             elif tool_name == "search_wikipedia":
                 query = args.get("query", "")
@@ -241,7 +211,6 @@ async def execute_agent_loop(session_id: str, user_prompt: str, callback_fn, con
             logger.error(f"Tool {tool_name} failed: {tool_err}")
             tool_result = json.dumps({"status": "error", "message": str(tool_err)})
 
-        # Log tool output to terminal console stream in React
         await callback_fn({
             "type": "tool_executed",
             "tool": tool_name,
@@ -249,11 +218,9 @@ async def execute_agent_loop(session_id: str, user_prompt: str, callback_fn, con
             "result": tool_result
         })
 
-        # Append step to conversation history
         conversation_history.append({"role": "assistant", "content": json.dumps(action)})
         conversation_history.append({"role": "user", "content": f"Tool '{tool_name}' result: {tool_result}"})
 
-    # Exhausted steps limit
     await callback_fn({
         "type": "final_answer",
         "text": "I attempted to resolve the task but exceeded the maximum execution steps. Please try running the tests or checking the code logs."

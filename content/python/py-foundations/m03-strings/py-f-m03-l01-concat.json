@@ -13,7 +13,7 @@
   "content": {
     "en": {
       "title": "Joining Strings (Concatenation)",
-      "body_md": "You can add two strings together using the `+` operator. This is called **concatenation**.\n\nLike gluing two pieces of paper together.\n\n```python\nword1 = \"Hello\"\nword2 = \"World\"\nprint(word1 + word2)       # HelloWorld\nprint(word1 + \" \" + word2) # Hello World\n```"
+      "body_md": "In computer programming, combining multiple separate pieces of text into a cohesive sentence is one of the most frequent operations you will perform. In Python, joining two or more strings together end-to-end is formally known as string concatenation, and it is accomplished using the plus operator `+`.\n\nThink of string concatenation as taking two separate strips of paper and gluing their ends together securely into one continuous paper strip.\n\n```python\nword1 = \"Hello\"\nword2 = \"World\"\nprint(word1 + word2)       # HelloWorld\nprint(word1 + \" \" + word2) # Hello World\n```\n\nNotice that concatenation does not automatically insert spaces between words for you; you must explicitly provide any necessary space characters inside your string literals. Concatenation is strictly designed for strings; combining a string directly with a raw integer number requires type conversion. Mastering concatenation gives you full creative freedom to assemble customized greetings, build dynamic database queries, and display formatted messages. Programmers commonly combine user profile names with custom greeting templates, localized status alerts, and structured system notifications across web services."
     },
     "te": {
       "title": "స్ట్రింగ్స్ కలపడం (Concatenation)",
@@ -68,6 +68,12 @@
       "You need to join three strings: `\"Namaste, \"`, `name`, and `\"!\"`.",
       "Don't forget the spaces. `Namaste, ` is one complete string with a space at the end.",
       "Write `print(\"Namaste, \" + name + \"!\")`."
+    ],
+    "fixed_output": false,
+    "hints_te": [
+      "మూడు స్ట్రింగ్స్‌ని కలపడానికి + ఆపరేటర్ వాడండి.",
+      "స్పేస్ మిస్ అవ్వకుండా \"Namaste, \" అని రాయండి.",
+      "ప్లాన్: print(\"Namaste, \" + name + \"!\") అని రాయండి."
     ]
   },
   "teaching_notes": "Spacing is tricky. Students might miss the space after comma: 'Namaste,'.",
@@ -76,13 +82,16 @@
       "qtype": "predict_output",
       "prompt_md": "What prints?\n```python\nprint(\"A\" + \"B\")\n```",
       "answer": "AB",
-      "explanation_md": "`+` joins two strings exactly as they are without adding any extra spaces."
+      "explanation_md": "String concatenation merges A and B together into AB.",
+      "code": "print(\"A\" + \"B\")"
     },
     {
       "qtype": "predict_output",
       "prompt_md": "If user types `5`, what prints?\n```python\nx = input()\nprint(x + x)\n```",
       "answer": "55",
-      "explanation_md": "`input()` always returns text (String). So \"5\" + \"5\" gives \"55\"."
+      "explanation_md": "input() returns a string, so '5' + '5' concatenates into '55'.",
+      "code": "x = input()\nprint(x + x)",
+      "stdin": "5\n"
     }
   ],
   "recap": [

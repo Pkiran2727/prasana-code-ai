@@ -76,33 +76,43 @@ export default function InteractiveLessonView({
     setEnergy(prev => Math.max(0, prev - 1));
 
     try {
-      const currentTest = testResults[selectedTestCase] || testResults[0] || { expected: '', input: '' };
-      const res = await fetch(`${API_BASE_URL}/api/verify-solution`, {
+      const lessonId = lesson?.id || lesson?.slug || 'py-f-m01-l01-print';
+      const token = localStorage.getItem('access_token') || localStorage.getItem('supabase_token') || '';
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const res = await fetch(`${API_BASE_URL}/api/lessons/${lessonId}/submit`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
-          session_id: sessionId || 'default_session',
-          code: code,
-          language: lesson?.language || 'python',
-          expected_output: currentTest.expected,
-          stdin: currentTest.input
+          code: code
         })
       });
       const data = await res.json();
       
-      setTestResults(prev => {
-        const updated = [...prev];
-        if (updated[selectedTestCase]) {
-          updated[selectedTestCase] = {
-            ...updated[selectedTestCase],
-            output: (data.actual_output || data.stderr || (data.timed_out ? 'Execution Timed Out' : 'No output')).trim(),
-            status: data.passed ? 'passed' : 'failed'
-          };
-        }
-        return updated;
-      });
+      if (data.results && Array.isArray(data.results)) {
+        setTestResults(data.results.map((r, idx) => ({
+          id: idx + 1,
+          input: r.stdin || '',
+          output: (r.actual || r.stderr || (r.timed_out ? 'Execution Timed Out' : 'No output')).trim(),
+          expected: r.expected || '',
+          status: r.passed ? 'passed' : 'failed'
+        })));
+      } else {
+        setTestResults(prev => {
+          const updated = [...prev];
+          if (updated[selectedTestCase]) {
+            updated[selectedTestCase] = {
+              ...updated[selectedTestCase],
+              output: (data.output || data.stderr || (data.passed ? 'Passed' : 'Failed')).trim(),
+              status: data.passed ? 'passed' : 'failed'
+            };
+          }
+          return updated;
+        });
+      }
     } catch (err) {
-      console.error('Run code error:', err);
+      console.error('Submit code error:', err);
     } finally {
       setIsRunning(false);
     }

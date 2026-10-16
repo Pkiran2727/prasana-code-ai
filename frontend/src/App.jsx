@@ -64,7 +64,7 @@ export default function App() {
 
   // Terminal State
   const [terminalLines, setTerminalLines] = useState([
-    { type: 'system', text: 'LiveCodeAI workspace environment initialized.' },
+    { type: 'system', text: 'Prasana Code AI workspace environment initialized.' },
     { type: 'system', text: 'Python 3.11 sandbox execution container ready.' }
   ]);
 
@@ -294,7 +294,7 @@ export default function App() {
     setUserRole("user");
     setShowMonitor(false);
     setTerminalLines([
-      { type: 'system', text: 'LiveCodeAI workspace environment initialized.' },
+      { type: 'system', text: 'Prasana Code AI workspace environment initialized.' },
       { type: 'system', text: 'Python 3.11 sandbox execution container ready.' }
     ]);
   };

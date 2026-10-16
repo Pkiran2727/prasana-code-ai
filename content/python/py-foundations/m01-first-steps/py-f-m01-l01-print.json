@@ -11,7 +11,7 @@
   "content": {
     "en": {
       "title": "Your First Python Code",
-      "body_md": "Programming is like giving instructions to a computer. In Python, the simplest instruction is `print()`. It tells the computer to show something on the screen. \n\nThink of it as writing a note on a whiteboard.\n\n```python\nprint(\"Hello, World!\")\n```\nThis will show `Hello, World!` on the screen. The text you want to print must be inside quotes (`\" \"` or `' '`)."
+      "body_md": "Programming is fundamentally about giving clear, precise instructions to a digital computer to solve real-world problems. In Python, the first and most essential instruction you learn is the built-in `print()` function. It instructs the Python interpreter to display whatever data you pass directly onto your terminal screen or console window.\n\nThink of calling `print()` as writing an announcement on a clean whiteboard where every student in the room can see it clearly.\n\n```python\nprint(\"Hello, World!\")\n```\n\nWhen Python executes this line, the message appears instantly in your output area. Notice carefully that any text or string characters you wish to print must be wrapped inside matching quotation marks, using either double quotes or single quotes. If you omit the quotes, Python assumes the words are variable identifiers and will raise a syntax error. Practice running greetings to build confidence right now. Every software engineer starts their programming journey by printing helpful status messages to understand application flow."
     },
     "te": {
       "title": "మీ మొదటి పైథాన్ కోడ్",
@@ -30,26 +30,6 @@
         "stdin": "",
         "expected": "Namaste, Python!",
         "hidden": false
-      },
-      {
-        "stdin": "a\n",
-        "expected": "Namaste, Python!",
-        "hidden": false
-      },
-      {
-        "stdin": "b\n",
-        "expected": "Namaste, Python!",
-        "hidden": false
-      },
-      {
-        "stdin": "c\n",
-        "expected": "Namaste, Python!",
-        "hidden": true
-      },
-      {
-        "stdin": "d\n",
-        "expected": "Namaste, Python!",
-        "hidden": true
       }
     ],
     "wrong_solutions": [
@@ -66,6 +46,12 @@
       "Use the print() function to display text on the screen.",
       "The text inside print() must be enclosed in double quotes (\").",
       "Plan: Write print(\"Namaste, Python!\")."
+    ],
+    "fixed_output": true,
+    "hints_te": [
+      "స్క్రీన్‌పై టెక్స్ట్‌ని చూపించడానికి print() ఫంక్షన్‌ని ఉపయోగించండి.",
+      "print() లోపల ఉన్న టెక్స్ట్ తప్పనిసరిగా డబుల్ కోట్స్ లో ఉండాలి.",
+      "ప్లాన్: print(\"Namaste, Python!\") అని మీ కోడ్‌లో రాయండి."
     ]
   },
   "teaching_notes": "Common mistakes: forgetting quotes, uppercase/lowercase mismatches (e.g., 'print' vs 'Print'). Emphasize that the text must match exactly.",
@@ -96,7 +82,8 @@
       "qtype": "predict_output",
       "prompt_md": "What prints?\n```python\nprint(\"123\")\n```",
       "answer": "123",
-      "explanation_md": "Whatever is inside `print()` will be displayed on the screen."
+      "explanation_md": "Whatever is inside `print()` will be displayed on the screen.",
+      "code": "print(\"123\")"
     }
   ],
   "recap": [

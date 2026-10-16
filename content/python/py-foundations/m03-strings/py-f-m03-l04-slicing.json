@@ -13,7 +13,7 @@
   "content": {
     "en": {
       "title": "String Slicing",
-      "body_md": "Sometimes you want a piece of a string, not just one character. This is called **slicing**. You use `[start:end]`.\n\nIt takes characters from `start` up to (but **NOT** including) `end`.\n\n```python\nword = \"PYTHON\"\nprint(word[0:2]) # PY\nprint(word[2:5]) # THO\n```"
+      "body_md": "While indexing allows you to pick a single character from a string, you often need to extract a whole portion or substring. In Python, this versatile technique is called string slicing. Slicing uses the syntax `string[start:end]`, where Python extracts all characters beginning at the `start` index and continues up to, but crucially not including, the `end` index position.\n\nThink of using a kitchen knife to cut a precise slice out of a loaf of sandwich bread between two measurement marks.\n\n```python\nword = \"PYTHON\"\nprint(word[0:2]) # PY\nprint(word[2:5]) # THO\n```\n\nBecause the end index is exclusive, `[0:3]` gives you exactly three characters: positions zero, one, and two. If you omit the start index, Python defaults to the beginning of the string; if you omit the end index, it slices through the very end. Slicing empowers programmers to truncate long headlines, extract domain names from email addresses, and isolate relevant tokens seamlessly. Mastering start and end slice parameters gives you total control when trimming URL paths, isolating timestamps, or preparing input strings for machine learning models."
     },
     "te": {
       "title": "స్ట్రింగ్ స్లైసింగ్ (String Slicing)",
@@ -68,6 +68,12 @@
       "To get the first 3 characters, you need indices 0 to 2.",
       "In slicing, the end index is not included, so you must provide 3 as the end index.",
       "Write `text[0:3]`."
+    ],
+    "fixed_output": false,
+    "hints_te": [
+      "మొదటి 3 అక్షరాల కోసం 0 నుంచి 3 వరకు స్లైస్ చేయండి.",
+      "స్లైసింగ్‌లో ఎండ్ ఇండెక్స్ చేర్చబడదు, కాబట్టి [0:3] వాడాలి.",
+      "ప్లాన్: print(text[0:3]) అని మీ కోడ్‌లో రాయండి."
     ]
   },
   "teaching_notes": "The 'up to but not including' rule confuses many. Remind them that [0:3] gives exactly 3 characters.",
@@ -76,7 +82,8 @@
       "qtype": "predict_output",
       "prompt_md": "What prints?\n```python\nword = \"BANANA\"\nprint(word[0:4])\n```",
       "answer": "BANA",
-      "explanation_md": "0(B), 1(A), 2(N), 3(A). The index 4(N) is NOT included."
+      "explanation_md": "word[0:4] extracts characters at indices 0, 1, 2, and 3, which is BANA.",
+      "code": "word = \"BANANA\"\nprint(word[0:4])"
     },
     {
       "qtype": "mcq_single",

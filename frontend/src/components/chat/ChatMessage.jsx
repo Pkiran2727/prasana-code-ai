@@ -126,7 +126,7 @@ export default function ChatMessage({ message }) {
     <div className={`flex flex-col gap-1.5 max-w-[85%] ${isUser ? 'self-end' : 'self-start'}`}>
       {/* Sender Tag */}
       <span className={`text-[10px] font-bold tracking-wider uppercase px-1 select-none ${isUser ? 'text-accent-blue text-right' : 'text-purple-400 text-left'}`}>
-        {isUser ? 'You' : 'LiveCodeAI Agent'}
+        {isUser ? 'You' : 'Prasana Code AI Agent'}
       </span>
 
       {/* Bubble container */}
