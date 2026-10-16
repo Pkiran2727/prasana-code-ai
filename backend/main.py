@@ -103,13 +103,13 @@ class CreateNodeRequest(BaseModel):
 class UpdateFileRequest(BaseModel):
     content: str = Field(..., description="Updated file content string")
 
-# Helper to verify session exists and belongs to the authenticated user
+# Helper to verify session exists and belongs to the authenticated user (fail-closed)
 def require_session(session_id: str, current_user: dict = Depends(get_current_user)):
     if not check_session_exists(session_id):
         raise HTTPException(status_code=404, detail="Workspace session not found or expired.")
         
     owner_id = get_user_id_for_session(session_id)
-    if owner_id and owner_id != current_user["id"]:
+    if not owner_id or owner_id != current_user["id"]:
         raise HTTPException(status_code=403, detail="Access denied: You do not own this session.")
         
     return session_id
@@ -127,11 +127,13 @@ def api_create_session(current_user: dict = Depends(get_current_user)):
 # Endpoint: Destroy session workspace
 @app.delete("/session/{session_id}")
 def api_destroy_session(session_id: str, current_user: dict = Depends(get_current_user)):
-    # Verify ownership before destroying
-    if check_session_exists(session_id):
-        owner_id = get_user_id_for_session(session_id)
-        if owner_id and owner_id != current_user["id"]:
-            raise HTTPException(status_code=403, detail="Access denied: You do not own this session.")
+    # Verify ownership before destroying (fail-closed)
+    if not check_session_exists(session_id):
+        raise HTTPException(status_code=404, detail="Session not found or already deleted.")
+
+    owner_id = get_user_id_for_session(session_id)
+    if not owner_id or owner_id != current_user["id"]:
+        raise HTTPException(status_code=403, detail="Access denied: You do not own this session.")
             
     success = destroy_session(session_id)
     if not success:
@@ -246,28 +248,34 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str, token: str =
         await websocket.close(code=4004)
         return
         
-    # Enforce authentication and session ownership verification
+    # Enforce authentication and session ownership verification (fail-closed)
     owner_id = get_user_id_for_session(session_id)
-    if owner_id:
-        if not token:
-            logger.warning(f"WebSocket rejected for session {session_id}: missing auth token")
-            await websocket.close(code=4001)
-            return
-        if not supabase:
-            logger.error("Supabase not configured, rejecting authenticated WebSocket")
+    if not owner_id:
+        logger.warning(f"WebSocket rejected for session {session_id}: session has no registered owner")
+        await websocket.close(code=4003)
+        return
+
+    if not token:
+        logger.warning(f"WebSocket rejected for session {session_id}: missing auth token")
+        await websocket.close(code=4001)
+        return
+
+    if not supabase:
+        logger.error("Supabase not configured, rejecting authenticated WebSocket")
+        await websocket.close(code=4003)
+        return
+
+    try:
+        user_res = supabase.auth.get_user(token)
+        user = user_res.user
+        if not user or user.id != owner_id:
+            logger.warning(f"WebSocket forbidden: user {getattr(user, 'id', None)} is not owner {owner_id}")
             await websocket.close(code=4003)
             return
-        try:
-            user_res = supabase.auth.get_user(token)
-            user = user_res.user
-            if not user or user.id != owner_id:
-                logger.warning(f"WebSocket forbidden: user {getattr(user, 'id', None)} is not owner {owner_id}")
-                await websocket.close(code=4003)
-                return
-        except Exception as e:
-            logger.error(f"WebSocket auth validation failed: {e}")
-            await websocket.close(code=4002)
-            return
+    except Exception as e:
+        logger.error(f"WebSocket auth validation failed: {e}")
+        await websocket.close(code=4002)
+        return
 
     await websocket.accept()
     logger.info(f"WebSocket client connected to session {session_id}")

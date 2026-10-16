@@ -89,17 +89,18 @@ async def login(payload: dict):
         logger.error(f"Sign in error: {e}")
         raise HTTPException(status_code=401, detail="Invalid email or password.")
 
+ALLOWED_OAUTH_PROVIDERS = {"google", "github"}
+
 @router.get("/oauth/{provider}")
 async def get_oauth_url(provider: str, redirect_to: str = None):
+    if provider.lower() not in ALLOWED_OAUTH_PROVIDERS:
+        raise HTTPException(status_code=400, detail=f"Unsupported OAuth provider: {provider}")
     if not supabase:
         raise HTTPException(status_code=503, detail="Authentication service unavailable.")
-    try:
-        options = {}
-        if redirect_to:
-            options["redirect_to"] = redirect_to
-        res = supabase.auth.get_oauth_sign_in_url(provider, options=options)
-        return {"url": res.url if hasattr(res, "url") else str(res)}
-    except Exception as e:
-        logger.error(f"OAuth URL error: {e}")
-        raise HTTPException(status_code=400, detail=str(e))
+    
+    # Frontend handles OAuth directly with supabase-js PKCE
+    return {
+        "provider": provider.lower(),
+        "message": "Use client-side Supabase SDK for OAuth redirect with PKCE flow."
+    }
 

@@ -3,6 +3,7 @@ import uuid
 import shutil
 import time
 import re
+import json
 import logging
 from backend.config import SESSIONS_DIR, SESSION_TTL_MINUTES
 
@@ -47,11 +48,47 @@ if __name__ == "__main__":
 # Global in-memory map of session_id to user_id (and email)
 SESSION_TO_USER = {}
 
+def _read_persisted_session_meta(session_id: str) -> dict:
+    """Reads session metadata persisted on disk to survive server restarts."""
+    if not is_safe_session_id(session_id):
+        return {}
+    meta_path = os.path.join(SESSIONS_DIR, session_id, ".session_meta.json")
+    if os.path.exists(meta_path):
+        try:
+            with open(meta_path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return {}
+    return {}
+
+def _persist_session_meta(session_id: str, user_id: str, email: str = None):
+    """Writes session metadata to disk inside session directory."""
+    try:
+        session_dir = os.path.join(SESSIONS_DIR, session_id)
+        os.makedirs(session_dir, exist_ok=True)
+        meta_path = os.path.join(session_dir, ".session_meta.json")
+        with open(meta_path, "w", encoding="utf-8") as f:
+            json.dump({"id": user_id, "email": email, "created_at": time.time()}, f)
+    except Exception as e:
+        logger.error(f"Failed to persist session meta: {e}")
+
 def get_user_id_for_session(session_id: str) -> str or None:
-    return SESSION_TO_USER.get(session_id, {}).get("id")
+    if session_id in SESSION_TO_USER:
+        return SESSION_TO_USER[session_id].get("id")
+    persisted = _read_persisted_session_meta(session_id)
+    if persisted.get("id"):
+        SESSION_TO_USER[session_id] = persisted
+        return persisted["id"]
+    return None
 
 def get_user_email_for_session(session_id: str) -> str or None:
-    return SESSION_TO_USER.get(session_id, {}).get("email")
+    if session_id in SESSION_TO_USER:
+        return SESSION_TO_USER[session_id].get("email")
+    persisted = _read_persisted_session_meta(session_id)
+    if persisted.get("email"):
+        SESSION_TO_USER[session_id] = persisted
+        return persisted.get("email")
+    return None
 
 def is_safe_session_id(session_id: str) -> bool:
     """Validate that session_id contains only safe alphanumeric/hyphen/underscore characters."""
@@ -75,8 +112,9 @@ def create_session(user_id: str = None, email: str = None) -> str:
     """Creates a new workspace session and syncs/initializes files with Supabase."""
     session_id = str(uuid.uuid4())
     
-    if user_id and email:
+    if user_id:
         SESSION_TO_USER[session_id] = {"id": user_id, "email": email}
+        _persist_session_meta(session_id, user_id, email)
         
     session_path = get_session_path(session_id)
     os.makedirs(session_path, exist_ok=True)

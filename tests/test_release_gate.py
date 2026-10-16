@@ -1,3 +1,20 @@
+"""
+RELEASE GATE for Prasana Code AI  -  "100% correct" ki definition.
+
+Run (from repo root, with a seeded Postgres):
+    export DATABASE_URL=postgresql://user:pass@host:5432/prasana_code_ai
+    pip install pytest
+    pytest tests/test_release_gate.py -v
+
+Rule: deploy cheyyadaniki ee file lo ALL tests PASS avvali (0 failed).
+Each test asserts the SECURE / CORRECT behaviour. On the audited commit (8403a0a) most of these FAIL.
+Tests that need a DB are skipped if DATABASE_URL is not set.
+RELEASE RULE = TWO RUNS, both must show 0 failed:
+  Run A (host / CI, repo root, has docker-compose.yml + frontend/):  pytest tests/test_release_gate.py -v
+  Run B (inside backend container, real runtime user + filesystem): docker compose exec backend pytest tests/test_release_gate.py -v
+      (needs pytest + tests/ in the image or mounted; repo-file tests are auto-skipped there)
+Run A must have 0 skipped "repo files" tests; Run B is what proves sandbox/env/uid behaviour.
+"""
 import os, re, sys, glob, json, uuid, warnings, logging
 import pytest
 

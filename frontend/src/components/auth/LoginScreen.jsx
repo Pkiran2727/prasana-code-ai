@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { loginApi, registerApi, getOAuthUrlApi } from '../../api/agentApi';
+import { loginApi, registerApi } from '../../api/agentApi';
+import { supabase } from '../../api/supabaseClient';
 import { Shield, User, Lock, Mail, ArrowRight, Code2, AlertCircle, X } from 'lucide-react';
 
 export default function LoginScreen({ onLoginSuccess, onClose }) {
@@ -38,11 +39,14 @@ export default function LoginScreen({ onLoginSuccess, onClose }) {
     setError('');
     setLoading(true);
     try {
-      const data = await getOAuthUrlApi('google');
-      if (data && data.url) {
-        window.location.href = data.url;
-      } else {
-        throw new Error('Could not obtain Google authentication URL.');
+      const { error: oauthError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+      if (oauthError) {
+        throw oauthError;
       }
     } catch (err) {
       setError(err.message || 'Failed to initialize Google authentication.');
