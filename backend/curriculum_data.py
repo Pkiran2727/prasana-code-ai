@@ -46,9 +46,12 @@ def _load_python_foundations():
                     "theory_en": d.get("content", {}).get("en", {}).get("body_md", ""),
                     "theory_te": d.get("content", {}).get("te", {}).get("body_md", ""),
                     "starterCode": ch.get("starter_code", ""),
+                    "solutionCode": ch.get("solution_code", ""),
                     "expectedOutput": test_cases[0]["expected"] if test_cases else "",
                     "testCases": test_cases,
-                    "hint": ch.get("hints", ["Review the concept notes."])[0],
+                    "allTests": ch.get("tests", []),
+                    "quiz": d.get("quiz", []),
+                    "hint": ch.get("hints", ["Review the concept notes."])[0] if ch.get("hints") else "Review the notes.",
                     "hints": ch.get("hints", []),
                     "language": "python",
                     "xp": d.get("xp", 10),
@@ -103,7 +106,7 @@ JOURNEYS_DATA = [
         "icon": "🌐",
         "badge": "Hot",
         "description": "Build modern responsive websites and interactive web apps using HTML, CSS, JavaScript, React, and Node.js.",
-        "totalLessons": 20,
+        "totalLessons": 2,
         "estimatedHours": 18,
         "courses": [
             {
@@ -147,7 +150,7 @@ JOURNEYS_DATA = [
         "icon": "⚡",
         "badge": "Interview Prep",
         "description": "Crack technical interviews with comprehensive coverage of Arrays, Two Pointers, Trees, Graphs, and Dynamic Programming.",
-        "totalLessons": 25,
+        "totalLessons": 2,
         "estimatedHours": 20,
         "courses": [
             {
@@ -191,7 +194,7 @@ JOURNEYS_DATA = [
         "icon": "⚙️",
         "badge": "High Performance",
         "description": "Master low-level programming, memory management, pointers, and high-performance Standard Template Library (STL).",
-        "totalLessons": 18,
+        "totalLessons": 1,
         "estimatedHours": 16,
         "courses": [
             {
@@ -222,7 +225,7 @@ JOURNEYS_DATA = [
         "icon": "🤖",
         "badge": "New",
         "description": "Learn to integrate OpenAI/Gemini LLMs, construct AI autonomous agents, fine-tune prompts, and build AI SaaS apps.",
-        "totalLessons": 15,
+        "totalLessons": 1,
         "estimatedHours": 12,
         "courses": [
             {

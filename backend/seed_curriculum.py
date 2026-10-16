@@ -22,6 +22,9 @@ DB_NAME = os.environ.get("DB_NAME", "prasana_code_ai")
 
 def get_db_connection():
     try:
+        dsn = os.environ.get("DATABASE_URL")
+        if dsn:
+            return psycopg2.connect(dsn)
         conn = psycopg2.connect(
             host=DB_HOST,
             port=DB_PORT,
@@ -123,16 +126,18 @@ def seed_data(conn, dry_run=False):
                         instructions = lesson.get("instructions", "Complete the challenge.")
                         starter_code = lesson.get("starterCode", "")
                         lesson_lang = lesson.get("language", "python")
+                        solution_code = lesson.get("solutionCode") or f"# Solution for {lesson.get('title')}\n"
                         
                         # Upsert Challenge (1:1 with lesson)
                         cur.execute("""
-                            INSERT INTO challenges (lesson_id, instructions_md, language, starter_code)
-                            VALUES (%s, %s, %s, %s)
+                            INSERT INTO challenges (lesson_id, instructions_md, language, starter_code, solution_code)
+                            VALUES (%s, %s, %s, %s, %s)
                             ON CONFLICT (lesson_id) DO UPDATE SET 
                                 instructions_md = EXCLUDED.instructions_md,
                                 language = EXCLUDED.language,
-                                starter_code = EXCLUDED.starter_code;
-                        """, (lesson_id, instructions, lesson_lang, starter_code))
+                                starter_code = EXCLUDED.starter_code,
+                                solution_code = EXCLUDED.solution_code;
+                        """, (lesson_id, instructions, lesson_lang, starter_code, solution_code))
                         
                         # Insert Hints
                         hints = lesson.get("hints", [])
@@ -145,21 +150,30 @@ def seed_data(conn, dry_run=False):
                                 ON CONFLICT (lesson_id, level) DO UPDATE SET content = EXCLUDED.content;
                             """, (lesson_id, h_idx + 1, h_text))
                             
-                        # Insert Test Cases
-                        test_cases = lesson.get("testCases") or []
-                        if test_cases:
+                        # Insert Test Cases (both visible and hidden)
+                        all_tests = lesson.get("allTests") or []
+                        if all_tests:
                             cur.execute("DELETE FROM test_cases WHERE lesson_id = %s;", (lesson_id,))
-                            for tc_idx, tc in enumerate(test_cases):
+                            for tc_idx, tc in enumerate(all_tests):
                                 cur.execute("""
                                     INSERT INTO test_cases (lesson_id, input_data, expected_output, is_hidden, sort_order)
-                                    VALUES (%s, %s, %s, FALSE, %s);
-                                """, (lesson_id, tc.get("input", ""), tc.get("expected", ""), tc_idx))
-                        elif lesson.get("expectedOutput"):
-                            cur.execute("DELETE FROM test_cases WHERE lesson_id = %s;", (lesson_id,))
-                            cur.execute("""
-                                INSERT INTO test_cases (lesson_id, input_data, expected_output, is_hidden, sort_order)
-                                VALUES (%s, '', %s, FALSE, 0);
-                            """, (lesson_id, lesson.get("expectedOutput")))
+                                    VALUES (%s, %s, %s, %s, %s);
+                                """, (lesson_id, tc.get("stdin", ""), tc.get("expected", ""), bool(tc.get("hidden", False)), tc_idx))
+                        else:
+                            test_cases = lesson.get("testCases") or []
+                            if test_cases:
+                                cur.execute("DELETE FROM test_cases WHERE lesson_id = %s;", (lesson_id,))
+                                for tc_idx, tc in enumerate(test_cases):
+                                    cur.execute("""
+                                        INSERT INTO test_cases (lesson_id, input_data, expected_output, is_hidden, sort_order)
+                                        VALUES (%s, %s, %s, FALSE, %s);
+                                    """, (lesson_id, tc.get("input", ""), tc.get("expected", ""), tc_idx))
+                            elif lesson.get("expectedOutput"):
+                                cur.execute("DELETE FROM test_cases WHERE lesson_id = %s;", (lesson_id,))
+                                cur.execute("""
+                                    INSERT INTO test_cases (lesson_id, input_data, expected_output, is_hidden, sort_order)
+                                    VALUES (%s, '', %s, FALSE, 0);
+                                """, (lesson_id, lesson.get("expectedOutput")))
 
                         # Insert Bilingual Content
                         if lesson.get("theory_en"):
@@ -174,6 +188,24 @@ def seed_data(conn, dry_run=False):
                                 VALUES (%s, 'te', %s, %s)
                                 ON CONFLICT (lesson_id, lang) DO UPDATE SET title = EXCLUDED.title, body_md = EXCLUDED.body_md;
                             """, (lesson_id, lesson.get("title_te", lesson.get("title", "")), lesson.get("theory_te", "")))
+
+                        # Insert Quizzes
+                        quizzes = lesson.get("quiz") or []
+                        if quizzes:
+                            cur.execute("DELETE FROM quiz_questions WHERE lesson_id = %s;", (lesson_id,))
+                            for q_idx, q in enumerate(quizzes):
+                                cur.execute("""
+                                    INSERT INTO quiz_questions (lesson_id, qtype, prompt_md, options, answer, explanation_md, sort_order)
+                                    VALUES (%s, %s, %s, %s, %s, %s, %s);
+                                """, (
+                                    lesson_id,
+                                    q.get("qtype", "mcq_single"),
+                                    q.get("prompt_md", ""),
+                                    json.dumps(q.get("options")) if q.get("options") else None,
+                                    json.dumps(q.get("answer", [])),
+                                    q.get("explanation_md", ""),
+                                    q_idx
+                                ))
                             
         if dry_run:
             conn.rollback()

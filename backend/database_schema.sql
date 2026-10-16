@@ -211,3 +211,66 @@ CREATE TABLE IF NOT EXISTS challenge_wrong_solutions (
   lesson_id UUID NOT NULL REFERENCES challenges(lesson_id) ON DELETE CASCADE,
   label TEXT NOT NULL, code TEXT NOT NULL
 );
+
+-- ==============================================================================
+-- 1. AUTH TRIGGER: Auto-create user_profile on auth.users sign-up (Supabase)
+-- ==============================================================================
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS trigger AS $$
+BEGIN
+  INSERT INTO public.user_profiles (id, email, role, plan, total_xp)
+  VALUES (new.id, new.email, 'user', 'free', 0)
+  ON CONFLICT (id) DO UPDATE SET email = EXCLUDED.email;
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DO $$ BEGIN
+  IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = 'auth') THEN
+    DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+    CREATE TRIGGER on_auth_user_created
+      AFTER INSERT ON auth.users
+      FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+  END IF;
+END $$;
+
+-- ==============================================================================
+-- 2. ROW LEVEL SECURITY (RLS): Enable on ALL 22 public tables
+-- ==============================================================================
+ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE courses ENABLE ROW LEVEL SECURITY;
+ALTER TABLE modules ENABLE ROW LEVEL SECURITY;
+ALTER TABLE lessons ENABLE ROW LEVEL SECURITY;
+ALTER TABLE challenges ENABLE ROW LEVEL SECURITY;
+ALTER TABLE challenge_hints ENABLE ROW LEVEL SECURITY;
+ALTER TABLE test_cases ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_progress ENABLE ROW LEVEL SECURITY;
+ALTER TABLE submissions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE lesson_content ENABLE ROW LEVEL SECURITY;
+ALTER TABLE quiz_questions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE roadmaps ENABLE ROW LEVEL SECURITY;
+ALTER TABLE roadmap_courses ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ai_usage ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ai_feedback ENABLE ROW LEVEL SECURITY;
+ALTER TABLE streaks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE daily_activity ENABLE ROW LEVEL SECURITY;
+ALTER TABLE daily_challenges ENABLE ROW LEVEL SECURITY;
+ALTER TABLE content_reports ENABLE ROW LEVEL SECURITY;
+ALTER TABLE certificates ENABLE ROW LEVEL SECURITY;
+ALTER TABLE challenge_wrong_solutions ENABLE ROW LEVEL SECURITY;
+
+-- Allow public read of published curriculum structure (excluding solution/hidden tests)
+DO $$ BEGIN
+  CREATE POLICY "Public read categories" ON categories FOR SELECT USING (true);
+  CREATE POLICY "Public read published courses" ON courses FOR SELECT USING (is_published = true);
+  CREATE POLICY "Public read modules" ON modules FOR SELECT USING (true);
+  CREATE POLICY "Public read published lessons" ON lessons FOR SELECT USING (is_published = true);
+  CREATE POLICY "Public read bilingual lesson content" ON lesson_content FOR SELECT USING (true);
+  CREATE POLICY "Public read roadmaps" ON roadmaps FOR SELECT USING (true);
+  CREATE POLICY "Public read roadmap_courses" ON roadmap_courses FOR SELECT USING (true);
+  CREATE POLICY "Public read certificates" ON certificates FOR SELECT USING (true);
+  CREATE POLICY "Public read visible tests" ON test_cases FOR SELECT USING (NOT is_hidden);
+EXCEPTION WHEN duplicate_object THEN null;
+END $$;
+
