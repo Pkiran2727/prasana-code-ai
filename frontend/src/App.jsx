@@ -8,6 +8,7 @@ import Terminal from './components/terminal/Terminal';
 import ChatPanel from './components/chat/ChatPanel';
 import LoginScreen from './components/auth/LoginScreen';
 import AdminMonitor from './components/admin/AdminMonitor';
+import { supabase } from './api/supabaseClient';
 
 import LandingHome from './components/views/LandingHome';
 import JourneysCatalog from './components/views/JourneysCatalog';
@@ -217,6 +218,36 @@ export default function App() {
       }
     };
   }, [sessionId]);
+
+  // 0. Supabase Auth State Change Listener (for OAuth PKCE redirect & persistent session)
+  useEffect(() => {
+    // Check initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        localStorage.setItem("access_token", session.access_token);
+        localStorage.setItem("user_email", session.user.email);
+        setIsAuthenticated(true);
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        localStorage.setItem("access_token", session.access_token);
+        localStorage.setItem("user_email", session.user.email);
+        setIsAuthenticated(true);
+        setShowLoginModal(false);
+      } else if (event === 'SIGNED_OUT') {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("user_email");
+        localStorage.removeItem("user_role");
+        setIsAuthenticated(false);
+      }
+    });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
+  }, []);
 
   // 1. Session Bootstrap on Authentication
   useEffect(() => {
