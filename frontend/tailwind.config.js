@@ -8,38 +8,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        slate: {
-          50: 'var(--c-slate-50)',
-          100: 'var(--c-slate-100)',
-          200: 'var(--c-slate-200)',
-          300: 'var(--c-slate-300)',
-          400: 'var(--c-slate-400)',
-          500: 'var(--c-slate-500)',
-          600: 'var(--c-slate-600)',
-          700: 'var(--c-slate-700)',
-          800: 'var(--c-slate-800)',
-          900: 'var(--c-slate-900)',
-          950: 'var(--c-slate-950)',
-        },
-        emerald: {
-          300: 'var(--c-emerald-300)',
-          400: 'var(--c-emerald-400)',
-          500: 'var(--c-emerald-500)',
-        },
-        teal: {
-          300: 'var(--c-teal-300)',
-          400: 'var(--c-teal-400)',
-          500: 'var(--c-teal-500)',
-        },
         ide: {
           bg: 'var(--bg-app)',
           panel: 'var(--bg-panel)',
           sidebar: 'var(--bg-surface)',
           terminal: 'var(--bg-terminal)',
           navbar: 'var(--bg-panel)',
-          border: 'var(--c-slate-800)',
-          text: 'var(--c-slate-100)',
-          muted: 'var(--c-slate-400)',
+          border: 'var(--c-border)',
+          text: 'var(--c-text)',
+          muted: 'var(--c-muted)',
         },
         accent: {
           blue: {
@@ -62,7 +39,7 @@ export default {
         }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        sans: ['Inter', 'Noto Sans Telugu', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
         mono: ['Fira Code', 'JetBrains Mono', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
       },
       animation: {

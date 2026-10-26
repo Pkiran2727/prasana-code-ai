@@ -39,6 +39,7 @@ export default function App() {
   const [activeLesson, setActiveLesson] = useState(null);
   const [userStats, setUserStats] = useState({ xp: 75, streak: 2 });
   const [activeTab, setActiveTab] = useState('home'); // 'home' | 'journeys' | 'practice' | 'ide' | 'pricing'
+  const [selectedTrack, setSelectedTrack] = useState('python-developer');
   const [sessionId, setSessionId] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState('python');
   const [llmStatus, setLlmStatus] = useState('online');
@@ -667,6 +668,10 @@ export default function App() {
           />
         ) : activeTab === 'journeys' ? (
           <JourneysCatalog
+            onSelectTrack={(trackId) => {
+              setSelectedTrack(trackId);
+              setActiveTab('map');
+            }}
             onSelectLesson={(lesson) => {
               setActiveTab('map');
             }}
@@ -674,13 +679,11 @@ export default function App() {
         ) : activeTab === 'map' ? (
           <GamifiedJourneyMap
             userStats={userStats}
+            initialTrack={selectedTrack}
+            onSelectTab={setActiveTab}
             onOpenPricing={() => setActiveTab('pricing')}
-            onStartLesson={(node) => {
-              setActiveLesson({
-                id: node.id,
-                title: node.title,
-                description: node.description || "Complete the task to proceed to the next node."
-              });
+            onStartLesson={(lesson) => {
+              setActiveLesson(lesson);
             }}
           />
         ) : activeTab === 'practice' ? (

@@ -8,25 +8,9 @@
     --bg-primary: #0b0f19;
     --text-primary: #f1f5f9;
     
-    /* Slate Palette (Standard) */
-    --c-slate-50: #f8fafc;
-    --c-slate-100: #f1f5f9;
-    --c-slate-200: #e2e8f0;
-    --c-slate-300: #cbd5e1;
-    --c-slate-400: #94a3b8;
-    --c-slate-500: #64748b;
-    --c-slate-600: #475569;
-    --c-slate-700: #334155;
-    --c-slate-800: #1e293b;
-    --c-slate-900: #0f172a;
-    --c-slate-950: #020617;
-
-    --c-emerald-300: #6ee7b7;
-    --c-emerald-400: #34d399;
-    --c-emerald-500: #10b981;
-    --c-teal-300: #5eead4;
-    --c-teal-400: #2dd4bf;
-    --c-teal-500: #14b8a6;
+    --c-border: #1e293b;
+    --c-text: #f1f5f9;
+    --c-muted: #94a3b8;
 
     /* Semantic backgrounds */
     --bg-app: #0b0f19;
@@ -41,25 +25,9 @@
     --bg-primary: #f8fafc;
     --text-primary: #0f172a;
     
-    /* Slate Palette (Inverted) */
-    --c-slate-50: #020617;
-    --c-slate-100: #0f172a;
-    --c-slate-200: #1e293b;
-    --c-slate-300: #334155;
-    --c-slate-400: #475569;
-    --c-slate-500: #64748b;
-    --c-slate-600: #94a3b8;
-    --c-slate-700: #cbd5e1;
-    --c-slate-800: #e2e8f0;
-    --c-slate-900: #f1f5f9;
-    --c-slate-950: #ffffff;
-
-    --c-emerald-300: #047857; /* 700 equivalent */
-    --c-emerald-400: #059669; /* 600 equivalent */
-    --c-emerald-500: #10b981;
-    --c-teal-300: #0f766e; /* 700 equivalent */
-    --c-teal-400: #0d9488; /* 600 equivalent */
-    --c-teal-500: #14b8a6;
+    --c-border: #cbd5e1;
+    --c-text: #0f172a;
+    --c-muted: #475569;
 
     /* Semantic backgrounds */
     --bg-app: #f8fafc;
@@ -74,25 +42,9 @@
     --bg-primary: #000000;
     --text-primary: #ffffff;
     
-    /* Slate Palette (High Contrast Dark) */
-    --c-slate-50: #ffffff;
-    --c-slate-100: #ffffff;
-    --c-slate-200: #dddddd;
-    --c-slate-300: #bbbbbb;
-    --c-slate-400: #999999;
-    --c-slate-500: #777777;
-    --c-slate-600: #555555;
-    --c-slate-700: #888888; /* Used for scrollbar thumb */
-    --c-slate-800: #ffffff; /* IMPORTANT: Used for borders - pure white for high contrast */
-    --c-slate-900: #000000;
-    --c-slate-950: #000000;
-
-    --c-emerald-300: #6ee7b7;
-    --c-emerald-400: #34d399;
-    --c-emerald-500: #10b981;
-    --c-teal-300: #5eead4;
-    --c-teal-400: #2dd4bf;
-    --c-teal-500: #14b8a6;
+    --c-border: #ffffff;
+    --c-text: #ffffff;
+    --c-muted: #aaaaaa;
 
     /* Semantic backgrounds */
     --bg-app: #000000;
@@ -107,25 +59,9 @@
     --bg-primary: #ffffff;
     --text-primary: #000000;
     
-    /* Slate Palette (High Contrast Light) */
-    --c-slate-50: #000000;
-    --c-slate-100: #000000;
-    --c-slate-200: #222222;
-    --c-slate-300: #444444;
-    --c-slate-400: #666666;
-    --c-slate-500: #888888;
-    --c-slate-600: #aaaaaa;
-    --c-slate-700: #777777; /* Used for scrollbar thumb */
-    --c-slate-800: #000000; /* IMPORTANT: Used for borders - pure black for high contrast */
-    --c-slate-900: #ffffff;
-    --c-slate-950: #ffffff;
-
-    --c-emerald-300: #064e3b; /* 900 */
-    --c-emerald-400: #065f46; /* 800 */
-    --c-emerald-500: #047857; /* 700 */
-    --c-teal-300: #134e4a; /* 900 */
-    --c-teal-400: #115e59; /* 800 */
-    --c-teal-500: #0f766e; /* 700 */
+    --c-border: #000000;
+    --c-text: #000000;
+    --c-muted: #555555;
 
     /* Semantic backgrounds */
     --bg-app: #ffffff;

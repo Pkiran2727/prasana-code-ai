@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BookOpen, Clock, Award, Sparkles, ArrowRight, Play, CheckCircle2 } from 'lucide-react';
 import { API_BASE_URL } from '../../api/agentApi';
 
-export default function JourneysCatalog({ onSelectLesson }) {
+export default function JourneysCatalog({ onSelectLesson, onSelectTrack }) {
   const [journeys, setJourneys] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -101,8 +101,12 @@ export default function JourneysCatalog({ onSelectLesson }) {
 
                   <button
                     onClick={() => {
-                      const firstLesson = journey.courses[0]?.lessons[0];
-                      if (firstLesson) onSelectLesson(firstLesson);
+                      if (onSelectTrack) {
+                        onSelectTrack(journey.id);
+                      } else {
+                        const firstLesson = journey.courses[0]?.lessons[0];
+                        if (firstLesson) onSelectLesson(firstLesson);
+                      }
                     }}
                     className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl bg-ide-sidebar hover:bg-gradient-to-r hover:from-emerald-400 hover:via-teal-400 hover:to-emerald-300 hover:text-slate-950 text-ide-text font-semibold text-xs transition-all duration-200 shadow-sm active:scale-95"
                   >
