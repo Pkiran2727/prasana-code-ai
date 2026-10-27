@@ -89,11 +89,15 @@ export default function PricingView({ userEmail }) {
         })
       });
       await res.json();
+      localStorage.setItem('user_plan', selectedPlan?.id || 'pro');
+      window.dispatchEvent(new Event('storage'));
       setIsProcessing(false);
       setShowUpiModal(false);
       setPaymentSuccess(true);
     } catch (err) {
       console.error('UPI Verification error:', err);
+      localStorage.setItem('user_plan', selectedPlan?.id || 'pro');
+      window.dispatchEvent(new Event('storage'));
       setIsProcessing(false);
       setShowUpiModal(false);
       setPaymentSuccess(true);
@@ -136,6 +140,8 @@ export default function PricingView({ userEmail }) {
                 plan_id: plan.id
               })
             });
+            localStorage.setItem('user_plan', plan.id || 'pro');
+            window.dispatchEvent(new Event('storage'));
             setIsProcessing(false);
             setPaymentSuccess(true);
           },
@@ -161,6 +167,8 @@ export default function PricingView({ userEmail }) {
               plan_id: plan.id
             })
           });
+          localStorage.setItem('user_plan', plan.id || 'pro');
+          window.dispatchEvent(new Event('storage'));
           setIsProcessing(false);
           setPaymentSuccess(true);
         }, 1200);

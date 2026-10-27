@@ -18,6 +18,10 @@ export default function GamifiedJourneyMap({
   const [activeTrackId, setActiveTrackId] = useState(initialTrack);
   const [loading, setLoading] = useState(true);
 
+  const userRole = localStorage.getItem('user_role') || '';
+  const userPlan = localStorage.getItem('user_plan') || 'free';
+  const isProOrAdmin = userRole === 'admin' || userPlan === 'pro' || userPlan === 'lifetime' || userPlan === 'pro_monthly' || userPlan === 'pro_annual';
+
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/journeys`)
       .then(res => res.json())
@@ -93,17 +97,25 @@ export default function GamifiedJourneyMap({
         </div>
 
         {/* Pro Upgrade Card */}
-        <div className="p-4 rounded-2xl bg-slate-950/80 border border-emerald-500/30 text-center mt-6 shadow-lg shadow-emerald-950/30">
-          <Sparkles className="w-5 h-5 text-emerald-400 mx-auto mb-1 animate-pulse" />
-          <p className="text-xs font-bold text-white">Upgrade to PRO</p>
-          <p className="text-[10px] text-slate-400 mt-0.5 font-normal">Unlimited energy & AI Tutor hints</p>
-          <button
-            onClick={onOpenPricing}
-            className="w-full mt-3 py-2 rounded-xl bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-300 hover:from-emerald-300 hover:to-teal-300 text-slate-950 font-bold text-xs transition-all shadow-md active:scale-95"
-          >
-            Become Pro
-          </button>
-        </div>
+        {isProOrAdmin ? (
+          <div className="p-4 rounded-2xl bg-slate-950/80 border border-emerald-500/30 text-center mt-6 shadow-lg shadow-emerald-950/30">
+            <Sparkles className="w-5 h-5 text-emerald-400 mx-auto mb-1 animate-pulse" />
+            <p className="text-xs font-bold text-white">{userRole === 'admin' ? 'Admin Access Active' : 'PRO Member Active'}</p>
+            <p className="text-[10px] text-emerald-400 mt-0.5 font-normal">Unlimited energy & AI hints</p>
+          </div>
+        ) : (
+          <div className="p-4 rounded-2xl bg-slate-950/80 border border-emerald-500/30 text-center mt-6 shadow-lg shadow-emerald-950/30">
+            <Sparkles className="w-5 h-5 text-emerald-400 mx-auto mb-1 animate-pulse" />
+            <p className="text-xs font-bold text-white">Upgrade to PRO</p>
+            <p className="text-[10px] text-slate-400 mt-0.5 font-normal">Unlimited energy & AI Tutor hints</p>
+            <button
+              onClick={onOpenPricing}
+              className="w-full mt-3 py-2 rounded-xl bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-300 hover:from-emerald-300 hover:to-teal-300 text-slate-950 font-bold text-xs transition-all shadow-md active:scale-95"
+            >
+              Become Pro
+            </button>
+          </div>
+        )}
       </aside>
 
       {/* Main Center Module Grid Area */}
@@ -293,7 +305,7 @@ export default function GamifiedJourneyMap({
           </span>
           <span className="flex items-center gap-1.5 text-teal-300">
             <Zap className="w-4 h-4 text-teal-300 fill-teal-300" />
-            <span>5 Energy</span>
+            <span>{isProOrAdmin ? (userRole === 'admin' ? 'Unlimited (Admin)' : 'Unlimited (Pro)') : '5 Energy'}</span>
           </span>
         </div>
 

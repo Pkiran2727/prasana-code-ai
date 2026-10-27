@@ -117,6 +117,10 @@ export default function InteractiveLessonView({
   const [showEnergyModal, setShowEnergyModal] = useState(false);
   const [openHintIndex, setOpenHintIndex] = useState(null);
 
+  const userRole = localStorage.getItem('user_role') || '';
+  const userPlan = localStorage.getItem('user_plan') || 'free';
+  const isProOrAdmin = userRole === 'admin' || userPlan === 'pro' || userPlan === 'lifetime' || userPlan === 'pro_monthly' || userPlan === 'pro_annual';
+
   const [testResults, setTestResults] = useState([]);
 
   // Sync state whenever lesson changes
@@ -140,13 +144,15 @@ export default function InteractiveLessonView({
   }, [lesson]);
 
   const handleRunCode = async () => {
-    if (energy <= 0) {
+    if (!isProOrAdmin && energy <= 0) {
       setShowEnergyModal(true);
       return;
     }
 
     setIsRunning(true);
-    setEnergy(prev => Math.max(0, prev - 1));
+    if (!isProOrAdmin) {
+      setEnergy(prev => Math.max(0, prev - 1));
+    }
 
     try {
       const lessonId = lesson?.id || lesson?.slug || 'py-f-m01-l01-print';
@@ -269,9 +275,9 @@ export default function InteractiveLessonView({
             <Gem className="w-3.5 h-3.5 text-emerald-400 fill-emerald-400" />
             <span>{userStats?.xp || 76} XP</span>
           </div>
-          <div className="flex items-center gap-1.5 text-teal-300 bg-teal-500/10 border border-teal-500/30 px-3 py-1 rounded-full">
+          <div className="flex items-center gap-1.5 text-teal-300 bg-teal-500/10 border border-teal-500/30 px-3 py-1 rounded-full font-medium">
             <Zap className="w-3.5 h-3.5 text-teal-300 fill-teal-300" />
-            <span>{energy} Energy</span>
+            <span>{isProOrAdmin ? (userRole === 'admin' ? 'Unlimited (Admin)' : 'Unlimited (Pro)') : `${energy} Energy`}</span>
           </div>
         </div>
       </header>

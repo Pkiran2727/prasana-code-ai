@@ -2,16 +2,19 @@ from datetime import datetime, timezone
 
 
 def user_has_premium(profile: dict | None) -> bool:
-    """plan 'free' కాకపోతే, expiry లేదా భవిష్యత్తులో ఉంటే premium."""
-    if not profile or profile.get("plan", "free") == "free":
+    """plan 'free' కాకపోతే, expiry లేదా భవిష్యత్తులో ఉంటే premium. Admin అయితే unconditional premium."""
+    if not profile:
+        return False
+    if profile.get("role") == "admin":
+        return True
+    if profile.get("plan", "free") == "free":
         return False
     exp = profile.get("plan_expires_at")
     return exp is None or exp > datetime.now(timezone.utc)
 
 
 def get_profile(cur, user_id: str) -> dict | None:
-    # NOTE: user_profiles primary key column పేరు 'id' అని assume చేసాను; వేరే అయితే మార్చండి.
-    cur.execute("SELECT plan, plan_expires_at, total_xp FROM user_profiles WHERE id=%s", (user_id,))
+    cur.execute("SELECT plan, plan_expires_at, total_xp, role FROM user_profiles WHERE id=%s", (user_id,))
     return cur.fetchone()
 
 
