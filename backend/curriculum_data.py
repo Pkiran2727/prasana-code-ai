@@ -83,11 +83,12 @@ def _load_python_foundations():
 # Load foundations dynamically
 python_foundation_modules = _load_python_foundations()
 
-# Append Module 4: OOP and Exception Handling to Python Track
-python_foundation_modules.append({
-    "id": "py-m04",
-    "title": "Module 4: Object-Oriented Programming (OOP) & Exceptions",
-    "desc": "Master class definitions, __init__ constructors, object methods, and safe exception handling.",
+# Append Module 4: OOP and Exception Handling to Python Track (idempotent)
+if not any(m.get("id") == "py-m04" for m in python_foundation_modules):
+    python_foundation_modules.append({
+        "id": "py-m04",
+        "title": "Module 4: Object-Oriented Programming (OOP) & Exceptions",
+        "desc": "Master class definitions, __init__ constructors, object methods, and safe exception handling.",
     "lessons": [
         {
             "id": "py-f-m04-l01-classes",
