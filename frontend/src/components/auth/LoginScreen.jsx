@@ -57,6 +57,7 @@ export default function LoginScreen({ onLoginSuccess, onClose }) {
         token: `session_oauth_${provider}_${Math.random().toString(36).substring(2)}`
       };
       localStorage.setItem('supabase_token', sessionPayload.token);
+      localStorage.setItem('access_token', sessionPayload.token);
       localStorage.setItem('user_email', sessionPayload.email);
       localStorage.setItem('user_role', 'student');
       localStorage.setItem('user_plan', 'free');
@@ -86,8 +87,8 @@ export default function LoginScreen({ onLoginSuccess, onClose }) {
 
         {/* Logo & Header */}
         <div className="flex flex-col items-center mb-6 text-center">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-400 to-emerald-300 flex items-center justify-center shadow-lg shadow-emerald-500/20 mb-3">
-            <Code2 className="w-6 h-6 text-slate-950 font-bold" />
+          <div className="w-12 h-12 rounded-2xl overflow-hidden shadow-lg shadow-emerald-500/20 mb-3 border border-emerald-500/30">
+            <img src="/favicon.png" alt="IP Logo" className="w-full h-full object-cover" />
           </div>
           <h2 className="text-2xl font-extrabold tracking-tight">
             {mode === 'forgot' ? 'Reset Password' : mode === 'register' ? 'Create Your Account' : 'Welcome to Prasana Code AI'}
