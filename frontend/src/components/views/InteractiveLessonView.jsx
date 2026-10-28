@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
   X, Flame, Gem, Zap, Sparkles, Bug, Play, CheckCircle2, RotateCcw, 
-  ChevronDown, ChevronUp, Lock, Lightbulb, Target, CheckCircle, AlertTriangle, ArrowRight, BookOpen
+  ChevronDown, ChevronUp, Lock, Lightbulb, Target, CheckCircle, AlertTriangle, ArrowRight, BookOpen,
+  ChevronLeft, ChevronRight
 } from 'lucide-react';
 import MonacoEditor from '../editor/MonacoEditor';
 import ChatPanel from '../chat/ChatPanel';
@@ -99,6 +100,10 @@ export default function InteractiveLessonView({
   sessionId,
   userStats,
   onClose,
+  onNextLesson,
+  onPrevLesson,
+  hasNextLesson,
+  hasPrevLesson,
   onOpenPricing,
   onSendMessage,
   messages,
@@ -263,6 +268,26 @@ export default function InteractiveLessonView({
           <div className="flex items-center gap-2">
             <span className="text-xs text-slate-400 font-medium">Lesson:</span>
             <span className="font-bold text-sm text-white">{activeTitle}</span>
+          </div>
+          <div className="flex items-center gap-1.5 ml-2">
+            <button
+              onClick={onPrevLesson}
+              disabled={!hasPrevLesson}
+              className="px-2.5 py-1 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center gap-1 text-xs font-semibold border border-slate-700/60"
+              title="Previous Challenge"
+            >
+              <ChevronLeft className="w-3.5 h-3.5" />
+              <span>Prev</span>
+            </button>
+            <button
+              onClick={onNextLesson}
+              disabled={!hasNextLesson}
+              className="px-2.5 py-1 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center gap-1 text-xs font-semibold border border-slate-700/60"
+              title="Next Challenge"
+            >
+              <span>Next</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
 
@@ -552,6 +577,47 @@ export default function InteractiveLessonView({
             <div className="flex-1 overflow-y-auto p-4">
               {activeTab === 'testcases' ? (
                 <div className="space-y-4">
+                  {/* Celebratory Banner when All Tests Pass */}
+                  {testResults.length > 0 && testResults.every(t => t.status === 'passed') && (
+                    <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-emerald-900/60 to-teal-950/80 border border-emerald-500/50 shadow-xl flex flex-wrap items-center justify-between gap-3 animate-fade-in">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-xl shadow-inner">
+                          🎉
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-white font-extrabold text-sm">All Test Cases Passed!</span>
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                              +{lesson?.xp || 15} XP Earned
+                            </span>
+                          </div>
+                          <p className="text-xs text-emerald-200/80">
+                            Excellent work! Your code passed all test assertions without errors.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {hasNextLesson ? (
+                          <button
+                            onClick={onNextLesson}
+                            className="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-300 hover:from-emerald-300 hover:to-teal-300 text-slate-950 font-black text-xs transition-all shadow-lg shadow-emerald-500/25 active:scale-95 flex items-center gap-1.5"
+                          >
+                            <span>Next Challenge</span>
+                            <ArrowRight className="w-4 h-4" />
+                          </button>
+                        ) : (
+                          <button
+                            onClick={onClose}
+                            className="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-300 hover:from-emerald-300 hover:to-teal-300 text-slate-950 font-black text-xs transition-all shadow-lg shadow-emerald-500/25 active:scale-95 flex items-center gap-1.5"
+                          >
+                            <span>Complete Track</span>
+                            <CheckCircle2 className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Test case buttons */}
                   <div className="flex items-center gap-2 overflow-x-auto pb-1">
                     {testResults.map((t, idx) => (

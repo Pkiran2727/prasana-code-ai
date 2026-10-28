@@ -37,6 +37,7 @@ export default function App() {
   const [showMonitor, setShowMonitor] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [activeLesson, setActiveLesson] = useState(null);
+  const [lessonQueue, setLessonQueue] = useState([]);
   const [userStats, setUserStats] = useState({ xp: 75, streak: 2 });
   const [activeTab, setActiveTab] = useState('home'); // 'home' | 'journeys' | 'practice' | 'ide' | 'pricing'
   const [selectedTrack, setSelectedTrack] = useState('python-developer');
@@ -635,25 +636,47 @@ export default function App() {
       )}
 
       {/* Interactive Lesson View Overlay */}
-      {activeLesson && (
-        <InteractiveLessonView
-          lesson={activeLesson}
-          sessionId={sessionId}
-          userStats={userStats}
-          onClose={() => setActiveLesson(null)}
-          onOpenPricing={() => {
-            setActiveLesson(null);
-            setActiveTab('pricing');
-          }}
-          onSendMessage={handleSendMessage}
-          messages={messages}
-          agentStatus={agentStatus}
-          agentCurrentFile={agentCurrentFile}
-          isStreaming={isStreaming}
-          onClearHistory={handleClearHistory}
-          onStopAgent={handleStopAgent}
-        />
-      )}
+      {(() => {
+        const currentLessonIndex = activeLesson ? lessonQueue.findIndex(l => (l.id && l.id === activeLesson.id) || l.title === activeLesson.title) : -1;
+        const hasNextLesson = currentLessonIndex >= 0 && currentLessonIndex < lessonQueue.length - 1;
+        const hasPrevLesson = currentLessonIndex > 0;
+
+        const handleNextLesson = () => {
+          if (hasNextLesson) {
+            setActiveLesson(lessonQueue[currentLessonIndex + 1]);
+          }
+        };
+
+        const handlePrevLesson = () => {
+          if (hasPrevLesson) {
+            setActiveLesson(lessonQueue[currentLessonIndex - 1]);
+          }
+        };
+
+        return activeLesson ? (
+          <InteractiveLessonView
+            lesson={activeLesson}
+            sessionId={sessionId}
+            userStats={userStats}
+            onClose={() => setActiveLesson(null)}
+            onNextLesson={handleNextLesson}
+            onPrevLesson={handlePrevLesson}
+            hasNextLesson={hasNextLesson}
+            hasPrevLesson={hasPrevLesson}
+            onOpenPricing={() => {
+              setActiveLesson(null);
+              setActiveTab('pricing');
+            }}
+            onSendMessage={handleSendMessage}
+            messages={messages}
+            agentStatus={agentStatus}
+            agentCurrentFile={agentCurrentFile}
+            isStreaming={isStreaming}
+            onClearHistory={handleClearHistory}
+            onStopAgent={handleStopAgent}
+          />
+        ) : null;
+      })()}
 
       {/* Admin Security Dashboard Oversight Overlay */}
       {showMonitor && <AdminMonitor onClose={() => setShowMonitor(false)} />}
@@ -682,8 +705,9 @@ export default function App() {
             initialTrack={selectedTrack}
             onSelectTab={setActiveTab}
             onOpenPricing={() => setActiveTab('pricing')}
-            onStartLesson={(lesson) => {
+            onStartLesson={(lesson, queue) => {
               setActiveLesson(lesson);
+              if (queue && queue.length) setLessonQueue(queue);
             }}
           />
         ) : activeTab === 'practice' ? (

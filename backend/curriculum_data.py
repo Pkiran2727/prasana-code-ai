@@ -83,6 +83,47 @@ def _load_python_foundations():
 # Load foundations dynamically
 python_foundation_modules = _load_python_foundations()
 
+# Append Module 4: OOP and Exception Handling to Python Track
+python_foundation_modules.append({
+    "id": "py-m04",
+    "title": "Module 4: Object-Oriented Programming (OOP) & Exceptions",
+    "desc": "Master class definitions, __init__ constructors, object methods, and safe exception handling.",
+    "lessons": [
+        {
+            "id": "py-f-m04-l01-classes",
+            "title": "Classes & Objects in Python",
+            "title_te": "పైథాన్ క్లాసులు & ఆబ్జెక్టులు (OOP)",
+            "instructions": "Create a class `Coder` with an `__init__` constructor accepting `name` and `language`, and a method `info()` returning `'<name> codes in <language>'`. Instantiate `dev = Coder('Prasana', 'Python')` and print `dev.info()`.",
+            "instructions_te": "`name` మరియు `language` తీసుకునే `Coder` క్లాస్ రాసి, `Coder('Prasana', 'Python')` ఆబ్జెక్ట్ నుండి `info()` ని ప్రింట్ చేయండి.",
+            "theory_en": "Object-Oriented Programming (OOP) models real-world entities through classes and objects.\n\n```python\nclass Coder:\n    def __init__(self, name, lang):\n        self.name = name\n        self.lang = lang\n    def info(self):\n        return f'{self.name} codes in {self.lang}'\n\ndev = Coder('Prasana', 'Python')\nprint(dev.info())\n```",
+            "theory_te": "క్లాసులు ఆబ్జెక్టులను సృష్టించే బ్లూప్రింట్లు. `__init__` మెథడ్ కన్‌స్ట్రక్టర్ లా పనిచేస్తుంది.",
+            "starterCode": "class Coder:\n    def __init__(self, name, language):\n        self.name = name\n        self.language = language\n    def info(self):\n        return f\"{self.name} codes in {self.language}\"\n\ndev = Coder(\"Prasana\", \"Python\")\nprint(dev.info())\n",
+            "expectedOutput": "Prasana codes in Python",
+            "testCases": [{"input": "", "expected": "Prasana codes in Python"}],
+            "hint": "Define class Coder with __init__(self, name, language) and info(self).",
+            "hints_te": ["`def __init__(self, name, language):` అని రాయండి."],
+            "language": "python",
+            "xp": 20
+        },
+        {
+            "id": "py-f-m04-l02-exceptions",
+            "title": "Exception Handling with try-except",
+            "title_te": "ఎర్రర్ హ్యాండ్లింగ్ (try & except)",
+            "instructions": "Write a function `safe_divide(a, b)` that catches `ZeroDivisionError` and returns `'Division by zero error'`, or returns `a // b`. Print `safe_divide(10, 0)`.",
+            "instructions_te": "`ZeroDivisionError` వచ్చినప్పుడు `'Division by zero error'` ని రిటర్న్ చేసే `safe_divide(a, b)` ఫంక్షన్ రాసి, `safe_divide(10, 0)` ని ప్రింట్ చేయండి.",
+            "theory_en": "`try-except` blocks prevent Python programs from terminating unexpectedly when an exception arises at runtime.",
+            "theory_te": "రన్‌టైమ్ ఎర్రర్స్ వచ్చినప్పుడు ప్రోగ్రామ్ ఆగిపోకుండా `try-except` బ్లాక్స్ వాడతాము.",
+            "starterCode": "def safe_divide(a, b):\n    try:\n        return a // b\n    except ZeroDivisionError:\n        return 'Division by zero error'\n\nprint(safe_divide(10, 0))\n",
+            "expectedOutput": "Division by zero error",
+            "testCases": [{"input": "", "expected": "Division by zero error"}],
+            "hint": "Use try: return a // b except ZeroDivisionError: return 'Division by zero error'",
+            "hints_te": ["`try:` మరియు `except ZeroDivisionError:` వాడండి."],
+            "language": "python",
+            "xp": 20
+        }
+    ]
+})
+
 JOURNEYS_DATA = [
     {
         "id": "python-developer",
@@ -91,8 +132,7 @@ JOURNEYS_DATA = [
         "icon": "🐍",
         "badge": "Comprehensive",
         "description": "Master Python from syntax fundamentals to Object-Oriented Programming, Data Analysis, and Automation with Telugu & English lessons.",
-        "totalLessons": sum(len(m["lessons"]) for m in python_foundation_modules) if python_foundation_modules else 10,
-        "estimatedHours": 12,
+        "estimatedHours": 14,
         "courses": python_foundation_modules
     },
     {
@@ -102,8 +142,7 @@ JOURNEYS_DATA = [
         "icon": "🌐",
         "badge": "Popular",
         "description": "Build modern interactive web apps with JavaScript, ES6, Async/Await, and modern DOM principles with bilingual explanations.",
-        "totalLessons": 4,
-        "estimatedHours": 18,
+        "estimatedHours": 20,
         "courses": [
             {
                 "id": "js-m01",
@@ -189,6 +228,29 @@ JOURNEYS_DATA = [
                         "xp": 20
                     }
                 ]
+            },
+            {
+                "id": "js-m04",
+                "title": "Module 4: JSON Parsing & Data APIs",
+                "desc": "Work with JSON payloads, object serialization, and HTTP API handling.",
+                "lessons": [
+                    {
+                        "id": "js-m04-l01-json",
+                        "title": "JSON Parsing & Serialization",
+                        "title_te": "జావాస్క్రిప్ట్‌లో JSON హ్యాండ్లింగ్",
+                        "instructions": "Given a JSON string `raw = '{\"name\":\"Mitra\",\"role\":\"AI Tutor\"}'`, parse it using `JSON.parse()` and print `parsed.name` and `parsed.role` separated by a space using `console.log()`.",
+                        "instructions_te": "`JSON.parse()` వాడి JSON స్ట్రింగ్‌ని ఆబ్జెక్ట్‌గా మార్చి `name` మరియు `role` ని ప్రింట్ చేయండి.",
+                        "theory_en": "`JSON.parse()` converts a formatted JSON string into a structured JavaScript object.",
+                        "theory_te": "సర్వర్ నుండి వచ్చే JSON డేటాను జావాస్క్రిప్ట్ ఆబ్జెక్ట్‌గా మార్చడానికి `JSON.parse()` వాడతాము.",
+                        "starterCode": "const raw = '{\"name\":\"Mitra\",\"role\":\"AI Tutor\"}';\nconst parsed = JSON.parse(raw);\nconsole.log(parsed.name, parsed.role);\n",
+                        "expectedOutput": "Mitra AI Tutor",
+                        "testCases": [{"input": "", "expected": "Mitra AI Tutor"}],
+                        "hint": "const parsed = JSON.parse(raw); console.log(parsed.name, parsed.role);",
+                        "hints_te": ["`const parsed = JSON.parse(raw);` తర్వాత `console.log(parsed.name, parsed.role);` రాయండి."],
+                        "language": "javascript",
+                        "xp": 15
+                    }
+                ]
             }
         ]
     },
@@ -199,8 +261,7 @@ JOURNEYS_DATA = [
         "icon": "⚡",
         "badge": "Interview Prep",
         "description": "Crack technical coding interviews with core algorithms, Two Pointers, Stacks, Trees, and Dynamic Programming.",
-        "totalLessons": 3,
-        "estimatedHours": 20,
+        "estimatedHours": 22,
         "courses": [
             {
                 "id": "dsa-m01",
@@ -263,6 +324,29 @@ JOURNEYS_DATA = [
                         "xp": 25
                     }
                 ]
+            },
+            {
+                "id": "dsa-m03",
+                "title": "Module 3: Searching & Sorting Algorithms",
+                "desc": "Master Divide and Conquer algorithmic patterns and logarithmic search.",
+                "lessons": [
+                    {
+                        "id": "dsa-m03-l01-binarysearch",
+                        "title": "Binary Search in O(log n)",
+                        "title_te": "బైనరీ సెర్చ్ (Binary Search)",
+                        "instructions": "Implement binary search to find target `16` in sorted list `[2, 5, 8, 12, 16, 23, 38]`. Print the found index `4`.",
+                        "instructions_te": "క్రమబద్ధీకరించిన లిస్ట్‌లో బైనరీ సెర్చ్ ద్వారా `16` ఉన్న ఇండెక్స్ `4` ని కనుగొని ప్రింట్ చేయండి.",
+                        "theory_en": "Binary search repeatedly divides the search interval in half to locate an element in O(log n) time.",
+                        "theory_te": "సార్ట్ చేయబడిన లిస్ట్‌లో మధ్య ఎలిమెంట్‌తో పోల్చుకుంటూ O(log n) సమయంలో సెర్చ్ చేయవచ్చు.",
+                        "starterCode": "def binary_search(arr, target):\n    low, high = 0, len(arr) - 1\n    while low <= high:\n        mid = (low + high) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            low = mid + 1\n        else:\n            high = mid - 1\n    return -1\n\nprint(binary_search([2, 5, 8, 12, 16, 23, 38], 16))\n",
+                        "expectedOutput": "4",
+                        "testCases": [{"input": "", "expected": "4"}],
+                        "hint": "Use low, high pointers and calculate mid = (low + high) // 2.",
+                        "hints_te": ["`low, high` పాయింటర్స్ వాడి ప్రతి రౌండ్‌లోనూ `mid = (low + high) // 2` లెక్కించండి."],
+                        "language": "python",
+                        "xp": 25
+                    }
+                ]
             }
         ]
     },
@@ -273,8 +357,7 @@ JOURNEYS_DATA = [
         "icon": "⚙️",
         "badge": "Performance",
         "description": "Master low-level control, pointers, references, memory allocation, and STL containers.",
-        "totalLessons": 2,
-        "estimatedHours": 16,
+        "estimatedHours": 18,
         "courses": [
             {
                 "id": "cpp-m01",
@@ -314,6 +397,29 @@ JOURNEYS_DATA = [
                         "xp": 20
                     }
                 ]
+            },
+            {
+                "id": "cpp-m02",
+                "title": "Module 2: Pointers & Memory Management",
+                "desc": "Master direct memory addressing, pointer dereferencing, and references.",
+                "lessons": [
+                    {
+                        "id": "cpp-m02-l01-pointers",
+                        "title": "Pointers & Address-Of Operator",
+                        "title_te": "C++ పాయింటర్స్ & మెమరీ అడ్రస్ (* &)",
+                        "instructions": "Declare an integer `val = 42`, create a pointer `ptr = &val`, and print the dereferenced value `*ptr` using `std::cout`.",
+                        "instructions_te": "`val = 42` యొక్క అడ్రస్‌ను `int* ptr = &val` లో ఉంచి, `*ptr` ద్వారా దాని విలువ `42` ని ప్రింట్ చేయండి.",
+                        "theory_en": "A pointer holds the memory address of another variable. The `&` operator retrieves an address, and the `*` operator dereferences a pointer to access the stored value.\n\n```cpp\nint x = 10;\nint* p = &x;\nstd::cout << *p << std::endl; // 10\n```",
+                        "theory_te": "పాయింటర్ అంటే వేరొక వేరియబుల్ యొక్క మెమరీ అడ్రస్‌ను స్టోర్ చేసే వేరియబుల్. `&` అడ్రస్‌ని ఇస్తే, `*` ఆ అడ్రస్‌లోని విలువని ఇస్తుంది.",
+                        "starterCode": "#include <iostream>\n\nint main() {\n    int val = 42;\n    int* ptr = &val;\n    std::cout << *ptr << std::endl;\n    return 0;\n}\n",
+                        "expectedOutput": "42",
+                        "testCases": [{"input": "", "expected": "42"}],
+                        "hint": "Dereference using *ptr and print with std::cout << *ptr << std::endl;",
+                        "hints_te": ["`std::cout << *ptr << std::endl;` ద్వారా ప్రింట్ చేయండి."],
+                        "language": "cpp",
+                        "xp": 25
+                    }
+                ]
             }
         ]
     },
@@ -324,8 +430,7 @@ JOURNEYS_DATA = [
         "icon": "🤖",
         "badge": "Emerging",
         "description": "Learn LLM architectures, system prompt design, JSON outputs, and agentic tool-calling workflows.",
-        "totalLessons": 1,
-        "estimatedHours": 14,
+        "estimatedHours": 16,
         "courses": [
             {
                 "id": "ai-m01",
@@ -349,10 +454,38 @@ JOURNEYS_DATA = [
                         "xp": 20
                     }
                 ]
+            },
+            {
+                "id": "ai-m02",
+                "title": "Module 2: Agentic Tool Calling & Function Schemas",
+                "desc": "Format external tools and runtime functions into LLM-compatible JSON schemas.",
+                "lessons": [
+                    {
+                        "id": "ai-m02-l01-tools",
+                        "title": "LLM Function Calling Schema",
+                        "title_te": "AI ఏజెంట్ టూల్ కాలింగ్ స్కీమా",
+                        "instructions": "Define a tool calling dictionary with function name `'run_code'`, serialize its name attribute to JSON using `json.dumps()`, and print it.",
+                        "instructions_te": "`'run_code'` ఫంక్షన్ పేరుతో టూల్ స్కీమా రాసి, దాని పేరును JSON ద్వారా ప్రింట్ చేయండి.",
+                        "theory_en": "Modern agentic systems expose APIs as structured JSON schemas to let LLMs invoke external execution environments.",
+                        "theory_te": "LLM ఏజెంట్లు కోడ్ ఎగ్జిక్యూషన్ మరియు డేటాబేస్ టూల్స్‌ని పిలవడానికి JSON స్కీమా ఫార్మాట్ వాడతాయి.",
+                        "starterCode": "import json\n\ntool = {\n    'name': 'run_code',\n    'description': 'Executes code in isolated sandbox'\n}\n\nprint(json.dumps(tool['name']))\n",
+                        "expectedOutput": "\"run_code\"",
+                        "testCases": [{"input": "", "expected": "\"run_code\""}],
+                        "hint": "Print json.dumps(tool['name'])",
+                        "hints_te": ["`print(json.dumps(tool['name']))` రాయండి."],
+                        "language": "python",
+                        "xp": 25
+                    }
+                ]
             }
         ]
     }
 ]
+
+# Guarantee totalLessons perfectly matches the actual number of lessons in every track
+for _j in JOURNEYS_DATA:
+    _j["totalLessons"] = sum(len(_c.get("lessons", [])) for _c in _j.get("courses", []))
+
 
 PRACTICE_PROBLEMS = [
     {
