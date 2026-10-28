@@ -78,7 +78,7 @@ export default function PracticeCatalog({ onSelectProblem }) {
             {filtered.map((prob) => (
               <div
                 key={prob.id}
-                onClick={() => onSelectProblem(prob)}
+                onClick={() => onSelectProblem(prob, filtered)}
                 className="group p-5 rounded-2xl bg-ide-panel/80 border border-ide-border hover:border-emerald-500/50 flex items-center justify-between cursor-pointer transition-all duration-200 shadow-md"
               >
                 <div className="flex items-center gap-4">

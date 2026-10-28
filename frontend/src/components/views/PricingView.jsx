@@ -9,8 +9,17 @@ export default function PricingView({ userEmail }) {
   const [showUpiModal, setShowUpiModal] = useState(false);
   const [txnRef, setTxnRef] = useState('');
 
-  // Business UPI ID from environment or config
   const businessUpiId = import.meta.env.VITE_UPI_ID || "";
+
+  React.useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setShowUpiModal(false);
+    };
+    if (showUpiModal) {
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [showUpiModal]);
 
   const plans = [
     {

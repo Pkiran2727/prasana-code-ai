@@ -149,7 +149,46 @@ def _norm(s: str) -> str:
 
 
 def run_tests(cur, lesson_id: str, code: str, only_visible: bool):
-    cur.execute("SELECT time_limit_ms, language FROM challenges WHERE lesson_id=%s", (lesson_id,))
+    import uuid
+    real_lesson_id = lesson_id
+    try:
+        uuid.UUID(str(lesson_id))
+    except (ValueError, TypeError, AttributeError):
+        cur.execute("SELECT id FROM lessons WHERE slug=%s", (lesson_id,))
+        row = cur.fetchone()
+        if row:
+            real_lesson_id = row["id"]
+        else:
+            from backend.curriculum_data import PRACTICE_PROBLEMS
+            prob = next((p for p in PRACTICE_PROBLEMS if p["id"] == lesson_id), None)
+            if prob:
+                results, passed, max_rt = [], 0, 0
+                tests = prob.get("testCases") or []
+                time_limit_ms = 3000
+                lang = prob.get("language", "python")
+                for t in tests:
+                    r = run_code(code, t.get("input", ""), time_limit_ms, language=lang)
+                    ok = (not r["timed_out"]) and _norm(r["stdout"]) == _norm(t.get("expected", ""))
+                    passed += ok
+                    max_rt = max(max_rt, r["runtime_ms"])
+                    results.append({
+                        "passed": ok,
+                        "hidden": False,
+                        "timed_out": r["timed_out"],
+                        "input": t.get("input", ""),
+                        "expected": t.get("expected", ""),
+                        "actual": r["stdout"],
+                        "error": r["stderr"]
+                    })
+                return {
+                    "passed": bool(tests) and passed == len(tests),
+                    "tests_passed": passed,
+                    "tests_total": len(tests),
+                    "runtime_ms": max_rt,
+                    "results": results
+                }
+
+    cur.execute("SELECT time_limit_ms, language FROM challenges WHERE lesson_id=%s", (real_lesson_id,))
     ch = cur.fetchone()
     if not ch:
         return {"passed": False, "tests_passed": 0, "tests_total": 0, "runtime_ms": 0, "results": []}
@@ -159,7 +198,7 @@ def run_tests(cur, lesson_id: str, code: str, only_visible: bool):
     q = "SELECT * FROM test_cases WHERE lesson_id=%s"
     if only_visible:
         q += " AND is_hidden = FALSE"
-    cur.execute(q + " ORDER BY sort_order", (lesson_id,))
+    cur.execute(q + " ORDER BY sort_order", (real_lesson_id,))
     tests = cur.fetchall()
 
     results, passed, max_rt = [], 0, 0
@@ -178,10 +217,33 @@ def run_tests(cur, lesson_id: str, code: str, only_visible: bool):
 
 
 def get_lesson_access(cur, lesson_id: str):
+    import uuid
+    is_uuid = False
+    try:
+        uuid.UUID(str(lesson_id))
+        is_uuid = True
+    except (ValueError, TypeError, AttributeError):
+        is_uuid = False
+
+    if not is_uuid:
+        from backend.curriculum_data import PRACTICE_PROBLEMS
+        prob = next((p for p in PRACTICE_PROBLEMS if p["id"] == lesson_id), None)
+        if prob:
+            return {
+                "id": prob["id"],
+                "slug": prob["id"],
+                "title": prob["title"],
+                "type": "challenge",
+                "xp_reward": 15,
+                "effective_premium": False,
+                "course_slug": "practice"
+            }
+
+    where_clause = "l.id=%s" if is_uuid else "l.slug=%s"
     cur.execute(f"""
         SELECT l.*, c.slug AS course_slug, {EFFECTIVE_PREMIUM_SQL} AS effective_premium
         FROM lessons l JOIN modules m ON m.id=l.module_id JOIN courses c ON c.id=m.course_id
-        WHERE l.id=%s AND l.is_published AND c.is_published""", (lesson_id,))
+        WHERE {where_clause} AND l.is_published AND c.is_published""", (lesson_id,))
     return cur.fetchone()
 
 

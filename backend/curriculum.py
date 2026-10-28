@@ -120,12 +120,24 @@ def submit(lesson_id: str, body: CodeIn, user_id: str = Depends(get_current_user
         if lesson["type"] != "challenge":
             raise HTTPException(400, "Not a challenge")
         res = ps.run_tests(cur, lesson_id, body.code, only_visible=False)
-        cur.execute("""INSERT INTO submissions (user_id, lesson_id, code, passed, tests_passed, tests_total, runtime_ms)
-                       VALUES (%s,%s,%s,%s,%s,%s,%s)""",
-                    (user_id, lesson_id, body.code, res["passed"], res["tests_passed"],
-                     res["tests_total"], res["runtime_ms"]))
-        ps.record_attempt(cur, user_id, lesson_id, body.code)
-        res["xp_awarded"] = ps.complete_lesson(cur, user_id, lesson_id, lesson["xp_reward"]) if res["passed"] else 0
+        target_id = lesson["id"]
+        import uuid
+        is_uuid = False
+        try:
+            uuid.UUID(str(target_id))
+            is_uuid = True
+        except (ValueError, TypeError, AttributeError):
+            is_uuid = False
+
+        if is_uuid:
+            cur.execute("""INSERT INTO submissions (user_id, lesson_id, code, passed, tests_passed, tests_total, runtime_ms)
+                           VALUES (%s,%s,%s,%s,%s,%s,%s)""",
+                        (user_id, target_id, body.code, res["passed"], res["tests_passed"],
+                         res["tests_total"], res["runtime_ms"]))
+            ps.record_attempt(cur, user_id, target_id, body.code)
+            res["xp_awarded"] = ps.complete_lesson(cur, user_id, target_id, lesson["xp_reward"]) if res["passed"] else 0
+        else:
+            res["xp_awarded"] = lesson["xp_reward"] if res["passed"] else 0
         return res
 
 

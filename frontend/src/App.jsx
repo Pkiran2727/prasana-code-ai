@@ -712,8 +712,9 @@ export default function App() {
           />
         ) : activeTab === 'practice' ? (
           <PracticeCatalog
-            onSelectProblem={(prob) => {
+            onSelectProblem={(prob, queue) => {
               setActiveLesson(prob);
+              if (queue && queue.length) setLessonQueue(queue);
             }}
           />
         ) : activeTab === 'pricing' ? (

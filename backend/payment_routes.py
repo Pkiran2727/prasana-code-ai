@@ -21,8 +21,8 @@ RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET", "")
 # Server-side fixed pricing table (in paise: ₹1 = 100 paise)
 PLAN_PRICING = {
     "pro_monthly": 79900,
-    "pro_annual": 499900,
-    "lifetime": 999900
+    "pro_annual": 249900,
+    "lifetime": 649900
 }
 
 class CreateOrderRequest(BaseModel):

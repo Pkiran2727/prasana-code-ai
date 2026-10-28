@@ -492,108 +492,164 @@ PRACTICE_PROBLEMS = [
     {
         "id": "prob-1",
         "title": "Reverse String",
+        "title_te": "స్ట్రింగ్ రివర్స్ చేయండి (Reverse String)",
         "difficulty": "Easy",
         "category": "Strings",
         "language": "python",
         "description": "Write a function `reverse_string(s)` that takes a string `s` and returns it reversed.",
+        "description_te": "ఒక స్ట్రింగ్ `s` ను తీసుకొని, దాన్ని తిరగరాసి (reversed) ఇచ్చే ఫంక్షన్ `reverse_string(s)` ను రాయండి.",
         "starterCode": "def reverse_string(s):\n    # Task: Write your solution here\n    pass\n\nprint(reverse_string(\"prasana\"))\n",
         "testCases": [
             {"input": "", "expected": "anasarp"},
             {"input": "", "expected": "nohtyp"},
             {"input": "", "expected": "olleh"}
         ],
-        "hint": "Use Python string slicing `s[::-1]` or iterate backwards."
+        "hint": "Use Python string slicing `s[::-1]` or iterate backwards.",
+        "hints_te": ["పైథాన్‌లో స్ట్రింగ్ స్లైసింగ్ `s[::-1]` ఉపయోగించవచ్చు లేదా లూప్ ద్వారా రివర్స్ చేయవచ్చు."]
     },
     {
         "id": "prob-2",
         "title": "FizzBuzz Challenge",
+        "title_te": "ఫిజ్ బజ్ ఛాలెంజ్ (FizzBuzz Challenge)",
         "difficulty": "Easy",
         "category": "Algorithms",
         "language": "python",
         "description": "Print numbers 1 to N. For multiples of 3 print 'Fizz', for multiples of 5 print 'Buzz', and for multiples of both print 'FizzBuzz'.",
+        "description_te": "1 నుండి N వరకు సంఖ్యలను ప్రింట్ చేయండి. 3 తో భాగించబడితే 'Fizz', 5 తో భాగించబడితే 'Buzz', మరియు రెండింటితో భాగించబడితే 'FizzBuzz' ప్రింట్ చేయండి.",
         "starterCode": "def fizz_buzz(n):\n    # Task: Your logic here\n    pass\n\nfizz_buzz(15)\n",
         "testCases": [
             {"input": "", "expected": "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz"},
             {"input": "", "expected": "1\n2\nFizz"}
         ],
-        "hint": "Check `i % 15 == 0` first, then `i % 3 == 0`, then `i % 5 == 0`."
+        "hint": "Check `i % 15 == 0` first, then `i % 3 == 0`, then `i % 5 == 0`.",
+        "hints_te": ["మొదట `i % 15 == 0` కండిషన్ చెక్ చేయండి, ఆ తర్వాత `i % 3 == 0`, తర్వాత `i % 5 == 0` చెక్ చేయండి."]
     },
     {
         "id": "prob-3",
         "title": "Palindrome Checker",
+        "title_te": "పాలిండ్రోమ్ నిర్ధారణ (Palindrome Checker)",
         "difficulty": "Easy",
         "category": "Strings",
         "language": "python",
         "description": "Write a function `is_palindrome(s)` that checks if a given string reads the same forwards and backwards. Return True or False.",
+        "description_te": "ఇచ్చిన స్ట్రింగ్ ముందు నుండి వెనుకకు ఒకే విధంగా ఉందో లేదో (పాలిండ్రోమ్) చెక్ చేసి True లేదా False ఇచ్చే `is_palindrome(s)` రాయండి.",
         "starterCode": "def is_palindrome(s):\n    # Task: Check if s is equal to its reverse\n    pass\n\nprint(is_palindrome(\"racecar\"))\n",
         "testCases": [
             {"input": "", "expected": "True"}
         ],
-        "hint": "Compare s.lower() with s.lower()[::-1]"
+        "hint": "Compare s.lower() with s.lower()[::-1]",
+        "hints_te": ["`s.lower()` ని `s.lower()[::-1]` తో పోల్చి సమానమైతే True రిటర్న్ చేయండి."]
     },
     {
         "id": "prob-4",
         "title": "Find Maximum in Array",
+        "title_te": "అర్రేలో గరిష్ట విలువ (Find Maximum in Array)",
         "difficulty": "Easy",
         "category": "Arrays",
         "language": "python",
         "description": "Write a function `find_max(nums)` that finds and returns the largest number in a list without using `max()`.",
+        "description_te": "బిల్ట్-ఇన్ `max()` వాడకుండా ఒక లిస్ట్‌లో అతి పెద్ద సంఖ్యను కనుగొనే ఫంక్షన్ `find_max(nums)` రాయండి.",
         "starterCode": "def find_max(nums):\n    # Task: Find maximum element\n    pass\n\nprint(find_max([3, 14, 7, 25, 9]))\n",
         "testCases": [
             {"input": "", "expected": "25"}
         ],
-        "hint": "Keep a variable `highest = nums[0]` and iterate through the list updating it."
+        "hint": "Keep a variable `highest = nums[0]` and iterate through the list updating it.",
+        "hints_te": ["`highest = nums[0]` గా తీసుకొని, లిస్ట్ గుండా లూప్ చేస్తూ పెద్ద విలువ వస్తే అప్‌డేట్ చేయండి."]
     },
     {
         "id": "prob-5",
         "title": "Sum of Even Numbers",
+        "title_te": "సరి సంఖ్యల మొత్తం (Sum of Even Numbers)",
         "difficulty": "Easy",
         "category": "Math",
         "language": "python",
         "description": "Write a function `sum_of_evens(n)` that returns the sum of all positive even numbers up to and including `n`.",
+        "description_te": "1 నుండి `n` వరకు గల అన్ని సరి సంఖ్యల (even numbers) మొత్తాన్ని లెక్కించే ఫంక్షన్ `sum_of_evens(n)` రాయండి.",
         "starterCode": "def sum_of_evens(n):\n    # Task: Calculate sum of evens\n    pass\n\nprint(sum_of_evens(10))\n",
         "testCases": [
             {"input": "", "expected": "30"}
         ],
-        "hint": "Even numbers up to 10 are 2, 4, 6, 8, 10. Their sum is 30."
+        "hint": "Even numbers up to 10 are 2, 4, 6, 8, 10. Their sum is 30.",
+        "hints_te": ["10 వరకు సరి సంఖ్యలు 2, 4, 6, 8, 10. వీటి మొత్తం 30 అవుతుంది. `range(2, n + 1, 2)` వాడవచ్చు."]
     },
     {
         "id": "prob-6",
         "title": "Count Vowels in String",
+        "title_te": "అచ్చుల లెక్కింపు (Count Vowels in String)",
         "difficulty": "Easy",
         "category": "Strings",
         "language": "python",
         "description": "Write a function `count_vowels(s)` that counts how many vowels (a, e, i, o, u) appear in the input string (case-insensitive).",
+        "description_te": "ఇచ్చిన స్ట్రింగ్‌లో ఎన్ని అచ్చులు (a, e, i, o, u) ఉన్నాయో లెక్కించే ఫంక్షన్ `count_vowels(s)` రాయండి.",
         "starterCode": "def count_vowels(s):\n    # Task: Count vowels\n    pass\n\nprint(count_vowels(\"Prasana Code AI\"))\n",
         "testCases": [
             {"input": "", "expected": "7"}
         ],
-        "hint": "Check each character: `if char.lower() in 'aeiou': count += 1`"
+        "hint": "Check each character: `if char.lower() in 'aeiou': count += 1`",
+        "hints_te": ["ప్రతి అక్షరాన్ని చెక్ చేయండి: `if char.lower() in 'aeiou': count += 1`"]
     },
     {
         "id": "prob-7",
         "title": "Factorial Calculator",
+        "title_te": "ఫ్యాక్టోరియల్ లెక్కింపు (Factorial Calculator)",
         "difficulty": "Medium",
         "category": "Recursion",
         "language": "python",
         "description": "Write a function `factorial(n)` that returns the factorial of integer `n` (n!).",
+        "description_te": "ఇచ్చిన పూర్ణాంకం `n` కు ఫ్యాక్టోరియల్ (n!) ను లెక్కించే ఫంక్షన్ `factorial(n)` రాయండి.",
         "starterCode": "def factorial(n):\n    # Task: Return n!\n    pass\n\nprint(factorial(5))\n",
         "testCases": [
             {"input": "", "expected": "120"}
         ],
-        "hint": "Base case: if n <= 1 return 1, otherwise return n * factorial(n - 1)."
+        "hint": "Base case: if n <= 1 return 1, otherwise return n * factorial(n - 1).",
+        "hints_te": ["బేస్ కేస్: `n <= 1` అయితే 1 రిటర్న్ చేయండి, లేకపోతే `n * factorial(n - 1)` రిటర్న్ చేయండి."]
     },
     {
         "id": "prob-8",
         "title": "Two Sum (DSA)",
+        "title_te": "టూ సమ్ అల్గారిథమ్ (Two Sum DSA)",
         "difficulty": "Medium",
         "category": "Arrays",
         "language": "python",
         "description": "Given a list `nums` and a `target`, return the two indices whose values add up to `target`.",
+        "description_te": "ఒక సంఖ్యల జాబితా `nums` మరియు `target` ఇచ్చినప్పుడు, వాటి మొత్తం target అయ్యే రెండు సూచికలను (indices) రిటర్న్ చేయండి.",
         "starterCode": "def two_sum(nums, target):\n    # Task: Return [index1, index2]\n    pass\n\nprint(two_sum([2, 7, 11, 15], 9))\n",
         "testCases": [
             {"input": "", "expected": "[0, 1]"}
         ],
-        "hint": "Use a dictionary `seen = {}` mapping number to its index."
+        "hint": "Use a dictionary `seen = {}` mapping number to its index.",
+        "hints_te": ["ఒక డిక్షనరీ `seen = {}` ఉపయోగించి, చూసిన నంబర్ మరియు దాని ఇండెక్స్‌ను స్టోర్ చేసుకుని O(n) లో పరిష్కరించవచ్చు."]
+    },
+    {
+        "id": "prob-9",
+        "title": "Array Filtering & Mapping",
+        "title_te": "అర్రే ఫిల్టరింగ్ & మ్యాపింగ్ (Array Filter JS)",
+        "difficulty": "Easy",
+        "category": "Web Dev",
+        "language": "javascript",
+        "description": "Write a JavaScript function `doubleEvens(arr)` that filters even numbers and doubles them.",
+        "description_te": "జావాస్క్రిప్ట్‌లో సరి సంఖ్యలను ఫిల్టర్ చేసి వాటిని రెట్టింపు చేసే ఫంక్షన్ `doubleEvens(arr)` రాయండి.",
+        "starterCode": "function doubleEvens(arr) {\n    // Task: filter evens and multiply by 2\n    return arr.filter(x => x % 2 === 0).map(x => x * 2);\n}\n\nconsole.log(JSON.stringify(doubleEvens([1, 2, 3, 4, 5, 6])));\n",
+        "testCases": [
+            {"input": "", "expected": "[4,8,12]"}
+        ],
+        "hint": "Use `arr.filter(n => n % 2 === 0).map(n => n * 2)`.",
+        "hints_te": ["జావాస్క్రిప్ట్ మెథడ్స్ `.filter()` మరియు `.map()` ఉపయోగించండి."]
+    },
+    {
+        "id": "prob-10",
+        "title": "Vector Elements Sum (C++)",
+        "title_te": "వెక్టర్ ఎలిమెంట్స్ మొత్తం (Vector Sum C++)",
+        "difficulty": "Medium",
+        "category": "Systems",
+        "language": "cpp",
+        "description": "Write a C++ program that calculates and prints the sum of integers in a vector.",
+        "description_te": "ఒక std::vector లోని సంఖ్యల మొత్తాన్ని లెక్కించి ప్రింట్ చేసే C++ ప్రోగ్రామ్ రాయండి.",
+        "starterCode": "#include <iostream>\n#include <vector>\n#include <numeric>\n\nint main() {\n    std::vector<int> nums = {10, 20, 30, 40};\n    int sum = 0;\n    for (int n : nums) sum += n;\n    std::cout << sum << std::endl;\n    return 0;\n}\n",
+        "testCases": [
+            {"input": "", "expected": "100"}
+        ],
+        "hint": "Iterate with a range-based for loop `for (int n : nums) sum += n;`.",
+        "hints_te": ["రేంజ్ బేస్డ్ ఫర్ లూప్ `for (int n : nums)` ఉపయోగించి సంకలనం చేయండి."]
     }
 ]

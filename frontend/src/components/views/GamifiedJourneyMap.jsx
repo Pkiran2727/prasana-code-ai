@@ -27,6 +27,16 @@ export default function GamifiedJourneyMap({
   const isProOrAdmin = userRole === 'admin' || userPlan === 'pro' || userPlan === 'lifetime' || userPlan === 'pro_monthly' || userPlan === 'pro_annual';
 
   useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setShowInvoiceModal(false);
+    };
+    if (showInvoiceModal) {
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [showInvoiceModal]);
+
+  useEffect(() => {
     fetch(`${API_BASE_URL}/api/journeys`)
       .then(res => res.json())
       .then(data => {
